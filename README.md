@@ -44,22 +44,21 @@ El sistema cubre las siguientes áreas:
 
 ### Día de Trabajo:
 Para calcular el valor de un día de trabajo:
-```math
-valor_dia = salario_base / 30
 
-# Incapacidad y Calamidad
+$$
+\text{valor dia} = \frac{\text{salario base}}{30}
+$$
 
-## Salario por incapacidad
+---
 
-```math
-salario = días\_incapacidad \times valor\_día
-```
+## Incapacidad y Calamidad
 
-## Deducción del auxilio de transporte por incapacidad
+### Salario por incapacidad:
+Para calcular el salario por incapacidad:
 
-```math
-deducción = \frac{auxilio\_transporte}{30} \times días\_incapacidad
-```
+$$
+\text{salario} = \text{días de incapacidad} \times \text{valor dia}
+$$
 
 ## Préstamos
 
@@ -127,6 +126,57 @@ Esto supone una jornada de 8 horas diarias y 30 días laborales al mes.
 
 - El sistema debe ofrecer una API para integración con sistemas contables externos, permitiendo el intercambio de datos para la contabilidad y la auditoría.
 
+# Fondo de Solidaridad Pensional (FSP)
+
+El **Fondo de Solidaridad Pensional (FSP)** es una deducción aplicada a trabajadores con ingresos superiores a un umbral establecido por ley, destinada a subsidiar pensiones de personas con menores ingresos. Su cálculo se rige por el **Estatuto Tributario (Ley 1819 de 2016)** y se actualiza anualmente según la **Unidad de Valor Tributario (UVT)**.  
+
+A continuación, te explicamos cómo se calcula el FSP en 2025:
+
+---
+
+##  Umbrales y porcentajes
+
+| **Rango de ingresos**       | **Porcentaje de deducción**  |
+|-----------------------------|----------------------------:|
+| Más de 4 UVT hasta 16 UVT   | 1% sobre el excedente       |
+| Más de 16 UVT               | 2% sobre el excedente       |
+
+---
+
+## Pasos para calcular el FSP en 2025
+
+### 1. Obtener el valor de la UVT 2025  
+- La **UVT** se ajusta anualmente según el **Índice de Precios al Consumidor (IPC)**.  
+- En **2023**, 1 UVT = **$47,700 COP** *(ejemplo ilustrativo; para 2025, consulta el valor oficial en el **DIAN**).*
+- **Ejemplo hipotético:** Supongamos que en **2025**, **1 UVT = $50,000 COP**.
+
+---
+
+### 2. Calcular los umbrales en pesos  
+- **4 UVT** = 4 × 50,000 = **200,000 COP**  
+- **16 UVT** = 16 × 50,000 = **800,000 COP**  
+
+---
+
+### 3. Aplicar los porcentajes según el salario  
+Si el salario es **$1,000,000 COP** *(ejemplo):*
+- **Excedente sobre 4 UVT:**  
+  1,000,000 - 200,000 = **$800,000**  
+- **Excedente sobre 16 UVT:**  
+  1,000,000 - 800,000 = **$200,000**  
+
+---
+
+## Cálculo del FSP  
+- **1% sobre (800,000 - 200,000):**  
+  600,000 × 1% = **6,000 COP**  
+- **2% sobre (200,000):**  
+  200,000 × 2% = **4,000 COP**  
+
+** Total FSP: 6,000 + 4,000 = $10,000 COP**  
+
+---
+  
 ## Ejemplo de Caso de Uso
 
 **Empleado con las siguientes características:**
