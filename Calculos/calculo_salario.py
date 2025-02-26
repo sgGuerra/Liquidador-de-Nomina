@@ -1,3 +1,4 @@
+from Excepciones.Exceptions import SalarioBaseNegativoError
 # Constantes
 SMLV = 1423500  # Salario mínimo legal vigente en 2025
 AUXILIO_TRANSPORTE = 200000  # Auxilio de transporte en 2025
@@ -58,7 +59,9 @@ def calcular_impuestos(salario_bruto):
         return (limite_superior - limite_inferior) * 0.01 + (salario_bruto - limite_superior) * 0.02
 
 def calcular_nomina(cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", horas_extras_adicionales=0, tipo_hora_extra_adicional="N/A", prestamo=0, cuotas=0, tasa_interes_anual=6):
-
+    if salario_base < 0:
+        raise SalarioBaseNegativoError()
+    
     salario_bruto = calcular_salario_bruto(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional)
     deducciones = calcular_deducciones(salario_base, prestamo, cuotas, tasa_interes_anual)
     impuestos = calcular_impuestos(salario_bruto)

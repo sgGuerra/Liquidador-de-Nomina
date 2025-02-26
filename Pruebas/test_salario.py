@@ -174,6 +174,19 @@ class CalculoSalarioTest(unittest.TestCase):
                                     tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
+
+    def test_salario_negativo(self):
+        # Datos de entrada
+        cargo = "Empleado nuevo"
+        salario_base = -1000000
+        horas_extras = 15
+        tipo_hora_extra = "Nocturnas"
+        horas_extras_adicionales = 0
+        tipo_hora_extra_adicional = "N/A"
+        prestamo = 300000
+        cuotas = 15
+        tasa_interes_anual = 6
+
         
         
 if __name__ == '__main__':
