@@ -1,4 +1,4 @@
-from Excepciones.Exceptions import SalarioBaseNegativoError
+from Excepciones.Exceptions import * 
 # Constantes
 SMLV = 1423500  # Salario mínimo legal vigente en 2025
 AUXILIO_TRANSPORTE = 200000  # Auxilio de transporte en 2025
@@ -17,7 +17,8 @@ BONIFICACIONES_POR_CARGO = {
 FACTORES_HORA_EXTRA = {
     "Diurnas": 1.25,
     "Nocturnas": 1.75,
-    "Festivas": 2.5
+    "Festivas": 2.5,
+    "N/A": 0
 }
 
 def calcular_bonificacion(cargo):
@@ -59,16 +60,29 @@ def calcular_impuestos(salario_bruto):
         return (limite_superior - limite_inferior) * 0.01 + (salario_bruto - limite_superior) * 0.02
 
 def calcular_nomina(cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", horas_extras_adicionales=0, tipo_hora_extra_adicional="N/A", prestamo=0, cuotas=0, tasa_interes_anual=6):
-    if salario_base < 0:
+
+    if salario_base <= 0:
         raise SalarioBaseNegativoError()
-    
+
     salario_bruto = calcular_salario_bruto(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional)
     deducciones = calcular_deducciones(salario_base, prestamo, cuotas, tasa_interes_anual)
     impuestos = calcular_impuestos(salario_bruto)
 
-    if horas_extras_adicionales + horas_extras > 30:
-        raise ValueError("La suma de horas extras y adicionales no puede superar 30 horas.")
+    total_horas_extra = horas_extras + horas_extras_adicionales
+    if total_horas_extra > 50:
+        raise LimiteHorasExtraError(horas_extras, horas_extras_adicionales)
 
+    if tipo_hora_extra not in FACTORES_HORA_EXTRA.keys():
+        raise TipoHoraExtraInvalidoError(tipo_hora_extra)
+
+    if tipo_hora_extra_adicional not in FACTORES_HORA_EXTRA.keys():
+        raise TipoHoraExtraInvalidoError(tipo_hora_extra_adicional)
+
+    if horas_extras < 0:
+        raise ValorHoraExtraNegativoError(horas_extras)
+    if horas_extras_adicionales < 0:
+        raise ValorHoraExtraNegativoError(horas_extras_adicionales)
+     
     if salario_base <= 2 * SMLV:
         auxilio_transporte = AUXILIO_TRANSPORTE
     else:

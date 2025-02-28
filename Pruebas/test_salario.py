@@ -1,5 +1,6 @@
 import unittest
 from Calculos.calculo_salario import calcular_nomina
+from Excepciones.Exceptions import *
 
 class CalculoSalarioTest(unittest.TestCase):
 
@@ -187,7 +188,56 @@ class CalculoSalarioTest(unittest.TestCase):
         cuotas = 15
         tasa_interes_anual = 6
 
-        
+        with self.assertRaises(SalarioBaseNegativoError):
+            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes_anual)
+
+    def test_tipo_hora_extra_invalido(self):
+        # Datos de entrada
+        cargo = "Empleado nuevo"
+        salario_base = 1650200
+        horas_extras = 5
+        tipo_hora_extra = "Festibas"
+        horas_extras_adicionales = 0
+        tipo_hora_extra_adicional = "N/A"
+        prestamo = 600000
+        cuotas = 32
+        tasa_interes_anual = 6
+
+        with self.assertRaises(TipoHoraExtraInvalidoError):
+            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes_anual)
+
+    def test_horas_extra_negativas(self):
+        # Datos de Entrada
+        cargo = "Empleado antiguo"
+        salario_base = 1560300
+        horas_extras = -10
+        tipo_hora_extra = "Diurnas"
+        horas_extras_adicionales = 0
+        tipo_hora_extra_adicional = "N/A"
+        prestamo = 0
+        cuotas = 0
+        tasa_interes_anual = 0
+
+        with self.assertRaises(ValorHoraExtraNegativoError):
+            calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+
+    def test_limite_horas_extra_excedido(self):
+        # Datos de Entrada
+        cargo = "Administrador"
+        salario_base = 4350000
+        horas_extras = 26
+        tipo_hora_extra = "Nocturnas"
+        horas_extras_adicionales = 25
+        tipo_hora_extra_adicional = "Diurnas"
+        prestamo = 500000
+        cuotas = 10
+        tasa_interes_anual = 6
+
+        with self.assertRaises(LimiteHorasExtraError):
+            calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+
         
 if __name__ == '__main__':
     unittest.main()

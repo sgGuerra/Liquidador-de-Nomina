@@ -1,5 +1,5 @@
 from Calculos.calculo_salario import calcular_nomina
-from Excepciones.Exceptions import SalarioBaseNegativoError
+from Excepciones.Exceptions import *
 def consola():
     print("Bienvenido al sistema de cálculo de nómina")
     cargo = input("Ingrese el cargo del empleado (Empleado nuevo, Empleado antiguo, Administrador): ")
@@ -21,7 +21,7 @@ def consola():
     except ValueError as e:
         print(f"Error: {e}")
     except Exception as e:
-        print(f"Ocurrió un error inesperado: {e}")
+        print(f"ocurrió un error inesperado{e}")
         
         
 if __name__ == "__main__":
