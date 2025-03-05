@@ -14,14 +14,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 500000
         cuotas = 12
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         # Datos salida
 
         salario_esperado = 1741902.51
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -35,14 +35,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 600000
         cuotas = 12
-        tasa_interes_anual = 7
+        tasa_interes = 7
 
         # Datos salida
 
         salario_esperado = 1780459.80
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -56,14 +56,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 100000
         cuotas = 12
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         # Datos salida
 
         salario_esperado = 4360626.47
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -77,14 +77,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 0
         cuotas = 12
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         # Datos salida
 
         salario_esperado = 2254454.59
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -99,14 +99,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 20000000
         cuotas = 40
-        tasa_interes_anual = 6
+        tasa_interes = 6
         
         
         # Datos salida
         
         salario_esperado =  57387376.47 
         
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         self.assertAlmostEqual(salario_esperado, resultado, 2)
         
@@ -121,7 +121,7 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 0
         cuotas = 0
-        tasa_interes_anual = 6
+        tasa_interes = 6
         
         
         # Datos salida
@@ -129,7 +129,7 @@ class CalculoSalarioTest(unittest.TestCase):
         salario_esperado =  2113302.30 
 
         
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -143,14 +143,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 2000000
         cuotas = 60
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         # Datos salida
 
         salario_esperado =  2273830.63
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -165,14 +165,14 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "Festivas"
         prestamo = 4000000
         cuotas = 10
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         # Datos salida
 
         salario_esperado = 5096898.39
 
         resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
@@ -186,10 +186,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 300000
         cuotas = 15
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         with self.assertRaises(SalarioBaseNegativoError):
-            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes_anual)
+            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes)
 
     def test_tipo_hora_extra_invalido(self):
         # Datos de entrada
@@ -201,10 +201,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 600000
         cuotas = 32
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         with self.assertRaises(TipoHoraExtraInvalidoError):
-            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes_anual)
+            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes)
 
     def test_horas_extra_negativas(self):
         # Datos de Entrada
@@ -216,11 +216,11 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "N/A"
         prestamo = 0
         cuotas = 0
-        tasa_interes_anual = 0
+        tasa_interes = 0
 
         with self.assertRaises(ValorHoraExtraNegativoError):
             calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
     def test_limite_horas_extra_excedido(self):
         # Datos de Entrada
@@ -232,11 +232,11 @@ class CalculoSalarioTest(unittest.TestCase):
         tipo_hora_extra_adicional = "Diurnas"
         prestamo = 500000
         cuotas = 10
-        tasa_interes_anual = 6
+        tasa_interes = 6
 
         with self.assertRaises(LimiteHorasExtraError):
             calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
 
         
 if __name__ == '__main__':
