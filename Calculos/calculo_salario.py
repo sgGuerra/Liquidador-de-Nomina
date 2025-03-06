@@ -1,4 +1,5 @@
 from Excepciones.Exceptions import * 
+
 # Constantes
 SMLV = 1423500  # Salario mínimo legal vigente en 2025
 AUXILIO_TRANSPORTE = 200000  # Auxilio de transporte en 2025
@@ -14,7 +15,6 @@ PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL= {
     "limite inferior": 0.01,
     "limite superior": 0.02
 }
-
 
 
 # Bonificaciones por cargo
@@ -52,7 +52,7 @@ def calcular_salario_bruto(cargo, salario_base, horas_extras, tipo_hora_extra, h
 def calcular_deducciones(salario_base, prestamo, cuotas, tasa_interes):
     salud = salario_base * PORCENTAJE_SALUD
     pension = salario_base * PORCENTAJE_PENSION
-    tasa_interes_anual = (1+(tasa_interes / 100))
+    tasa_interes_anual = (1 + (tasa_interes / 100))
     
     if cuotas <= 1:
         reporte_prestamo = prestamo

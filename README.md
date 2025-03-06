@@ -147,33 +147,33 @@ A continuación, te explicamos cómo se calcula el FSP en 2025:
 
 ### 1. Obtener el valor de la UVT 2025  
 - La **UVT** se ajusta anualmente según el **Índice de Precios al Consumidor (IPC)**.  
-- En **2023**, 1 UVT = **$47,700 COP** *(ejemplo ilustrativo; para 2025, consulta el valor oficial en el **DIAN**).*
-- **Ejemplo hipotético:** Supongamos que en **2025**, **1 UVT = $50,000 COP**.
+- En **2025**, 1 UVT = **$49,799 COP** *(ejemplo ilustrativo; para 2025, consulta el valor oficial en el **DIAN**).*
+- **Ejemplo hipotético:** Supongamos que en **2025**, **1 UVT = $49,700 COP**.
 
 ---
 
 ### 2. Calcular los umbrales en pesos  
-- **4 UVT** = 4 × 50,000 = **200,000 COP**  
-- **16 UVT** = 16 × 50,000 = **800,000 COP**  
+- **4 UVT** = 4 × 49,700 = **198,800 COP**  
+- **16 UVT** = 16 × 49,700 = **795,200 COP**  
 
 ---
 
 ### 3. Aplicar los porcentajes según el salario  
 Si el salario es **$1,000,000 COP** *(ejemplo):*
 - **Excedente sobre 4 UVT:**  
-  1,000,000 - 200,000 = **$800,000**  
+  1,000,000 - 198,800  = **$801,200**  
 - **Excedente sobre 16 UVT:**  
-  1,000,000 - 800,000 = **$200,000**  
+  1,000,000 - 795,200 = **$204,800**  
 
 ---
 
 ## Cálculo del FSP  
-- **1% sobre (800,000 - 200,000):**  
-  600,000 × 1% = **6,000 COP**  
-- **2% sobre (200,000):**  
-  200,000 × 2% = **4,000 COP**  
+- **1% sobre (801,200 - 204,800):**  
+  596,400 × 1% = **5,964 COP**  
+- **2% sobre (204,800):**  
+  204,800 × 2% = **4,096 COP**  
 
-** Total FSP: 6,000 + 4,000 = $10,000 COP**  
+** Total FSP: 5,964 + 4,096 = $10,060 COP**  
 
 ---
   
