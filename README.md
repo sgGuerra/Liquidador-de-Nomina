@@ -115,16 +115,16 @@ Esto supone una jornada de 8 horas diarias y 30 días laborales al mes.
 
 ### Validación de Datos
 
-- El sistema debe validar que los tipos de novedades sean correctos (por ejemplo, no se permiten vacaciones en días festivos).
-- Validación de la duración de las incapacidades, asegurando que no se computen días festivos o no laborales.
+- El sistema debe validar que los tipos de novedades sean correctos (por ejemplo, no se permiten ingresar horas extras negativas).
+- Validación de sobre el tipo de horas extras y cargos
 
 ### Persistencia
 
-- El sistema debe almacenar el historial de las liquidaciones por un periodo mínimo de 10 años, según la Ley 527 de 1999.
+- El sistema debe almacenar el historial de las liquidaciones por un periodo, según la Ley 527 de 1999.
 
 ### Interfaces
 
-- El sistema debe ofrecer una API para integración con sistemas contables externos, permitiendo el intercambio de datos para la contabilidad y la auditoría.
+- El sistema debe ofrecer una interfaz grafica web.
 
 # Fondo de Solidaridad Pensional (FSP)
 
