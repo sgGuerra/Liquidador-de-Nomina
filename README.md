@@ -1,5 +1,8 @@
 # Sistema de Liquidación de Nómina - Guía Técnica
 
+## Autores
+Luis Carlos Guerra Herrera - Santiago Alcaraz Durango
+
 ## Descripción General
 
 ### Propósito del sistema:
