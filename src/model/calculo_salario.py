@@ -1,25 +1,21 @@
-
-import sys 
+import sys
 sys.path.append("src")
 
-from model.excepciones import * 
+from model.excepciones import *  # Asegúrate de que las excepciones estén definidas en el módulo adecuado
 
 # Constantes
-SMLV = 1423500  # Salario mínimo legal vigente en 2025
+SALARIO_MINIMO_LEGAL_VIGENTE = 1423500  # Salario mínimo legal vigente en 2025
 AUXILIO_TRANSPORTE = 200000  # Auxilio de transporte en 2025
 VALOR_UVT = 49799  # Valor de la Unidad de Valor Tributario en 2025
 PORCENTAJE_SALUD = 0.04  # Porcentaje de descuento de salud
 PORCENTAJE_PENSION = 0.04  # Porcentaje de descuento de pensión
-DIVISOR_HORAS_LABORALES = 240 # Varia dependiendo de la frecuencia de pago(Mensual, Semanal, Quincenal, etc.), Se refiere al numero de horas trabajadas diarias por los dias trabajados
-MAXIMO_HORAS_EXTRA_LEGALES_PERMITIDAS = 50
+DIVISOR_HORAS_LABORALES = 240  # Número de horas trabajadas en un mes
+MAXIMO_HORAS_EXTRA_LEGALES_PERMITIDAS = 50  # Límite de horas extra legales
 
-
-
-PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL= {
+PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL = {
     "limite inferior": 0.01,
     "limite superior": 0.02
 }
-
 
 # Bonificaciones por cargo
 BONIFICACIONES_POR_CARGO = {
@@ -36,76 +32,90 @@ FACTORES_HORA_EXTRA = {
     "N/A": 0
 }
 
-def calcular_bonificacion(cargo):
-    return BONIFICACIONES_POR_CARGO.get(cargo, 0)
 
-def calcular_valor_hora_extra(salario_base, horas_extras, tipo_hora_extra):
-    factor = FACTORES_HORA_EXTRA.get(tipo_hora_extra, 0)
-    return (salario_base / DIVISOR_HORAS_LABORALES) * float(factor) * horas_extras
+class Nomina:
+    def __init__(self, cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", 
+                 horas_extras_adicionales=0, tipo_hora_extra_adicional="N/A", 
+                 prestamo=0, cuotas=0, tasa_interes=6):
+        self.cargo = cargo
+        self.salario_base = salario_base
+        self.horas_extras = horas_extras
+        self.tipo_hora_extra = tipo_hora_extra
+        self.horas_extras_adicionales = horas_extras_adicionales
+        self.tipo_hora_extra_adicional = tipo_hora_extra_adicional
+        self.prestamo = prestamo
+        self.cuotas = cuotas
+        self.tasa_interes = tasa_interes
 
-def calcular_salario_bruto(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional):
-    bonificacion = calcular_bonificacion(cargo)
-    valor_hora_extra = calcular_valor_hora_extra(salario_base, horas_extras, tipo_hora_extra)
+    def calcular_bonificacion(self):
+        return BONIFICACIONES_POR_CARGO.get(self.cargo, 0)
 
-    if horas_extras_adicionales > 0 and tipo_hora_extra_adicional != "N/A":
-        valor_hora_extra_adiccionales = calcular_valor_hora_extra(salario_base, horas_extras_adicionales, tipo_hora_extra_adicional)
-    else:
+    def calcular_valor_hora_extra(self, horas_extras, tipo_hora_extra):
+        factor = FACTORES_HORA_EXTRA.get(tipo_hora_extra, 0)
+        return (self.salario_base / DIVISOR_HORAS_LABORALES) * factor * horas_extras
+
+    def calcular_salario_bruto(self):
+        bonificacion = self.calcular_bonificacion()
+        valor_hora_extra = self.calcular_valor_hora_extra(self.horas_extras, self.tipo_hora_extra)
+
         valor_hora_extra_adiccionales = 0
-    return salario_base + bonificacion + valor_hora_extra + valor_hora_extra_adiccionales
+        if self.horas_extras_adicionales > 0 and self.tipo_hora_extra_adicional != "N/A":
+            valor_hora_extra_adiccionales = self.calcular_valor_hora_extra(self.horas_extras_adicionales, self.tipo_hora_extra_adicional)
+        
+        return self.salario_base + bonificacion + valor_hora_extra + valor_hora_extra_adiccionales
 
-def calcular_deducciones(salario_base, prestamo, cuotas, tasa_interes):
-    salud = salario_base * PORCENTAJE_SALUD
-    pension = salario_base * PORCENTAJE_PENSION
-    tasa_interes_anual = (1 + (tasa_interes / 100))
-    
-    if cuotas <= 1:
-        reporte_prestamo = prestamo
-    else:
-        reporte_prestamo = (prestamo * tasa_interes_anual) / cuotas
+    def calcular_deducciones(self):
+        salud = self.salario_base * PORCENTAJE_SALUD
+        pension = self.salario_base * PORCENTAJE_PENSION
+        tasa_interes_anual = (1 + (self.tasa_interes / 100))
 
-    return salud + pension + reporte_prestamo
+        if self.cuotas <= 1:
+            reporte_prestamo = self.prestamo
+        else:
+            reporte_prestamo = (self.prestamo * tasa_interes_anual) / self.cuotas
 
-def calcular_impuestos(salario_bruto):
-    
-    limite_inferior = 4 * VALOR_UVT
-    limite_superior = 16 * VALOR_UVT
-    
-    if salario_bruto <= limite_inferior:
-        return 0
-    elif salario_bruto <= limite_superior:
-        return (salario_bruto - limite_inferior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite inferior",0) #
-    else:
-        return (limite_superior - limite_inferior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite inferior",0) + (salario_bruto - limite_superior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite superior",0)
+        return salud + pension + reporte_prestamo
 
-def calcular_nomina(cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", horas_extras_adicionales=0, tipo_hora_extra_adicional="N/A", prestamo=0, cuotas=0, tasa_interes=6):
+    def calcular_impuestos(self, salario_bruto):
+        limite_inferior = 4 * VALOR_UVT
+        limite_superior = 16 * VALOR_UVT
 
-    if salario_base <= 0:
-        raise SalarioBaseNegativoError()
+        if salario_bruto <= limite_inferior:
+            return 0
+        elif salario_bruto <= limite_superior:
+            return (salario_bruto - limite_inferior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite inferior", 0)
+        else:
+            return (limite_superior - limite_inferior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite inferior", 0) + \
+                   (salario_bruto - limite_superior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite superior", 0)
 
-    salario_bruto = calcular_salario_bruto(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional)
-    deducciones = calcular_deducciones(salario_base, prestamo, cuotas, tasa_interes)
-    impuestos = calcular_impuestos(salario_bruto)
+    def calcular(self):
+        if self.salario_base <= 0:
+            raise SalarioBaseNegativoError()
 
-    total_horas_extra = horas_extras + horas_extras_adicionales
-    if total_horas_extra > MAXIMO_HORAS_EXTRA_LEGALES_PERMITIDAS:
-        raise LimiteHorasExtraError(horas_extras, horas_extras_adicionales)
+        salario_bruto = self.calcular_salario_bruto()
+        deducciones = self.calcular_deducciones()
+        impuestos = self.calcular_impuestos(salario_bruto)
 
-    if tipo_hora_extra not in FACTORES_HORA_EXTRA.keys():
-        raise TipoHoraExtraInvalidoError(tipo_hora_extra)
+        total_horas_extra = self.horas_extras + self.horas_extras_adicionales
+        if total_horas_extra > MAXIMO_HORAS_EXTRA_LEGALES_PERMITIDAS:
+            raise LimiteHorasExtraError(self.horas_extras, self.horas_extras_adicionales)
 
-    if tipo_hora_extra_adicional not in FACTORES_HORA_EXTRA.keys():
-        raise TipoHoraExtraInvalidoError(tipo_hora_extra_adicional)
+        if self.tipo_hora_extra not in FACTORES_HORA_EXTRA:
+            raise TipoHoraExtraInvalidoError(self.tipo_hora_extra)
 
-    if horas_extras < 0:
-        raise ValorHoraExtraNegativoError(horas_extras)
-    if horas_extras_adicionales < 0:
-        raise ValorHoraExtraNegativoError(horas_extras_adicionales)
-     
-    if salario_base <= 2 * SMLV:
-        auxilio_transporte = AUXILIO_TRANSPORTE
-    else:
-        auxilio_transporte = 0
+        if self.tipo_hora_extra_adicional not in FACTORES_HORA_EXTRA:
+            raise TipoHoraExtraInvalidoError(self.tipo_hora_extra_adicional)
 
-    return salario_bruto + auxilio_transporte - deducciones - impuestos
+        if self.horas_extras < 0:
+            raise ValorHoraExtraNegativoError(self.horas_extras)
+        if self.horas_extras_adicionales < 0:
+            raise ValorHoraExtraNegativoError(self.horas_extras_adicionales)
+
+        if self.salario_base <= 2 * SMLV:
+            auxilio_transporte = AUXILIO_TRANSPORTE
+        else:
+            auxilio_transporte = 0
+
+        return salario_bruto + auxilio_transporte - deducciones - impuestos
 
 

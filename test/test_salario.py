@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append("src")
-from model.calculo_salario import calcular_nomina
+from model.calculo_salario import Nomina
 from model.excepciones import *
 
 class CalculoSalarioTest(unittest.TestCase):
@@ -19,12 +19,13 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         # Datos salida
-
         salario_esperado = 1741902.51
 
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_normal_2(self):
@@ -40,12 +41,13 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 7
 
         # Datos salida
-
         salario_esperado = 1780459.80
 
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_normal_3(self):
@@ -61,12 +63,13 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         # Datos salida
-
         salario_esperado = 4360626.47
 
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_normal_4(self):
@@ -82,19 +85,19 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         # Datos salida
-
         salario_esperado = 2254454.59
 
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_extraordinario_SalarioAlto(self):
-        
         # Datos entrada
         cargo = "Administrador"
-        salario_base =  50000000
+        salario_base = 50000000
         horas_extras = 25
         tipo_hora_extra = "Festivas"
         horas_extras_adicionales = 0
@@ -102,18 +105,18 @@ class CalculoSalarioTest(unittest.TestCase):
         prestamo = 20000000
         cuotas = 40
         tasa_interes = 6
-        
-        
+
         # Datos salida
+        salario_esperado = 57387376.47
         
-        salario_esperado =  57387376.47 
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
-        
+
     def test_caso_extraordinario_MaxHorasExtras(self):
-        
         # Datos entrada
         cargo = "Empleado nuevo"
         salario_base = 1760800
@@ -124,15 +127,15 @@ class CalculoSalarioTest(unittest.TestCase):
         prestamo = 0
         cuotas = 0
         tasa_interes = 6
-        
-        
-        # Datos salida
-        
-        salario_esperado =  2113302.30 
 
+        # Datos salida
+        salario_esperado = 2113302.30
+
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_extraordinario_MaxCuotas(self):
@@ -148,16 +151,16 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         # Datos salida
+        salario_esperado = 2273830.63
 
-        salario_esperado =  2273830.63
-
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_caso_extraordinario_HorasExtrasAdiccionales(self):
-
         # Datos entrada
         cargo = "Administrador"
         salario_base = 5670500.00
@@ -170,12 +173,13 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         # Datos salida
-
         salario_esperado = 5096898.39
 
-        resultado = calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
-                                    tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
-
+        # Crear la instancia de la clase Nomina
+        nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, 
+                        tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+        
+        resultado = nomina.calcular()
         self.assertAlmostEqual(salario_esperado, resultado, 2)
 
     def test_salario_negativo(self):
@@ -191,7 +195,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         with self.assertRaises(SalarioBaseNegativoError):
-            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes)
+            # Crear la instancia de la clase Nomina
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
 
     def test_tipo_hora_extra_invalido(self):
         # Datos de entrada
@@ -206,7 +213,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         with self.assertRaises(TipoHoraExtraInvalidoError):
-            calcular_nomina(cargo,salario_base,horas_extras,tipo_hora_extra,horas_extras_adicionales,tipo_hora_extra_adicional,prestamo,cuotas,tasa_interes)
+            # Crear la instancia de la clase Nomina
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
 
     def test_horas_extra_negativas(self):
         # Datos de Entrada
@@ -221,8 +231,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 0
 
         with self.assertRaises(ValorHoraExtraNegativoError):
-            calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+            # Crear la instancia de la clase Nomina
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
                             tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
 
     def test_limite_horas_extra_excedido(self):
         # Datos de Entrada
@@ -237,9 +249,10 @@ class CalculoSalarioTest(unittest.TestCase):
         tasa_interes = 6
 
         with self.assertRaises(LimiteHorasExtraError):
-            calcular_nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+            # Crear la instancia de la clase Nomina
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
                             tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
 
-        
 if __name__ == '__main__':
     unittest.main()
