@@ -79,21 +79,23 @@ def consola():
             nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales, tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes_anual)
             salario_neto = nomina.calcular()
             bonificacion = nomina.calcular_bonificacion()
+            valor_horas_extra = nomina.calcular_valor_hora_extra(horas_extras, tipo_hora_extra)
+            valor_horas_extra_adicionales = nomina.calcular_valor_hora_extra(horas_extras_adicionales, tipo_hora_extra_adicional)
+            total_horas_extra = (valor_horas_extra * horas_extras) + (valor_horas_extra_adicionales * horas_extras_adicionales)
             resultados.append({
                 "cargo": cargo,
                 "salario_base": salario_base,
-                "bonificacion": bonificacion,
+                "bonificacion": bonificacion,       
                 "horas_extras": horas_extras,
                 "tipo_hora_extra": tipo_hora_extra,
                 "horas_extras_adicionales": horas_extras_adicionales,
                 "tipo_hora_extra_adicional": tipo_hora_extra_adicional,
+                "total_horas_extra": total_horas_extra,
                 "prestamo": prestamo,
                 "cuotas": cuotas,
                 "tasa_interes_anual": tasa_interes_anual,
                 "salario_neto": salario_neto
             })
-            print(f"El salario neto del empleado es: {salario_neto:.2f}")
-            print(f"La bonificación del empleado es: {bonificacion:.2f}")
 
             otra_nomina = input("¿Desea calcular otra nómina? (s/n): ").strip().lower()
             if otra_nomina != 's':
@@ -119,16 +121,15 @@ def consola():
     for i, resultado in enumerate(resultados, 1):
         print(f"\nEmpleado {i}:")
         print(f"  Cargo: {resultado['cargo']}")
-        print(f"  Salario Base: {resultado['salario_base']:.2f}")
-        print(f"  Bonificación por cargo: {resultado['bonificacion']:.2f}")
-        print(f"  Horas Extras: {int(resultado['horas_extras'])}")
-        print(f"  Tipo de Hora Extra: {resultado['tipo_hora_extra']}")
-        print(f"  Horas Extras Adicionales: {int(resultado['horas_extras_adicionales'])}")
-        print(f"  Tipo de Hora Extra Adicional: {resultado['tipo_hora_extra_adicional']}")
-        print(f"  Préstamo: {resultado['prestamo']:.2f}")
+        print(f"  Salario Base: ${resultado['salario_base']:.2f}")
+        print(f"  Bonificación por cargo: ${resultado['bonificacion']:.2f}")
+        print(f"  Horas Extras: {int(resultado['horas_extras'])} - Tipo de Hora Extra: {resultado['tipo_hora_extra']}")
+        print(f"  Horas Extras Adicionales: {int(resultado['horas_extras_adicionales'])} - Tipo de Hora Extra Adicional: {resultado['tipo_hora_extra_adicional']}")
+        print(f"  Valor total de horas extra: ${resultado['total_horas_extra']:.2f}")
+        print(f"  Préstamo: ${resultado['prestamo']:.2f}")
         print(f"  Cuotas: {resultado['cuotas']}")
-        print(f"  Tasa de Interés Anual: {resultado['tasa_interes_anual']:.2f}")
-        print(f"  Salario Neto: {resultado['salario_neto']:.2f}")
+        print(f"  Tasa de Interés Anual: {resultado['tasa_interes_anual']:.1f}%")
+        print(f"  Salario Neto: ${resultado['salario_neto']:.2f}")
 
 if __name__ == "__main__":
     consola()
