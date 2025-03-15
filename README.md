@@ -249,3 +249,64 @@ salario\_neto = 3,000,000 - 200,000 - 9,333.33 - 88,333.33 + 78,125 = 2,780,458.
     python test/test_nomina.py
     ```
   - `unittest` buscará y ejecutará las pruebas definidas en `test_nomina.py` y mostrará los resultados en la terminal.
+
+
+## Arquitectura del Proyecto
+
+El proyecto está organizado en una estructura de carpetas que facilita la separación de responsabilidades y la mantenibilidad del código. A continuación se describe la organización de los módulos y las bibliotecas utilizadas:
+
+#### Estructura de Carpetas
+
+```
+Liquidador-de-Nomina/
+│
+├── src/
+│   ├── model/
+│   │   ├── calculo_nomina.py
+│   │   ├── excepciones.py
+│   │   └── __init__.py
+│   ├── view/
+│   │   ├── console/
+│   │   │   ├── main.py
+│   │   │   └── __init__.py
+│   │   └── __init__.py
+│   └── __init__.py
+│
+├── test/
+│   ├── test_nomina.py
+│   └── __init__.py
+│
+├── README.md
+└── requirements.txt
+```
+
+#### Descripción de Carpetas y Archivos
+
+- **src/**: Contiene el código fuente del proyecto.
+  - **model/**: Incluye la lógica de negocio y las clases principales.
+    - `calculo_nomina.py`: Contiene la clase `Nomina` y las funciones para calcular el salario, horas extras, bonificaciones, etc.
+    - `excepciones.py`: Define las excepciones personalizadas utilizadas en el proyecto.
+  - **view/**: Contiene las interfaces de usuario.
+    - **console/**: Incluye la interfaz de consola para interactuar con el usuario.
+      - `main.py`: Implementa la lógica de la consola para la entrada y salida de datos.
+- **test/**: Contiene las pruebas unitarias.
+  - `test_nomina.py`: Incluye las pruebas unitarias para la clase `Nomina` y sus métodos.
+- `README.md`: Documentación del proyecto.
+- `requirements.txt`: Lista de dependencias y bibliotecas necesarias para ejecutar el proyecto.
+
+### Bibliotecas Usadas
+
+- **unittest**: Biblioteca estándar de Python para realizar pruebas unitarias.
+- **sys**: Biblioteca estándar de Python para manipular el entorno de ejecución.
+
+### Dependencias
+
+El proyecto no tiene dependencias externas adicionales a las bibliotecas estándar de Python. Todas las funcionalidades se implementan utilizando las bibliotecas estándar y el código propio del proyecto(por el momento).
+
+### Organización de Módulos
+
+- **model**: Contiene la lógica y las clases.
+- **view**: Contiene las interfaces de usuario, en este caso, una interfaz de consola.
+- **test**: Contiene las pruebas unitarias para asegurar la calidad del código.
+
+Esta organización modular permite una fácil extensión y mantenimiento del proyecto, asegurando que cada componente tenga una responsabilidad clara y definida.
