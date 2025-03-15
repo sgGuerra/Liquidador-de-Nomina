@@ -1,21 +1,21 @@
 # Sistema de Liquidación de Nómina - Guía Técnica
 
 ## Autores
-Luis Carlos Guerra Herrera - Santiago Alcaraz Durango
 
+- Santiago Alcaraz Durango
+- Luis Carlos Guerra Herrera 
 ## Descripción General
 
 ### Propósito del sistema:
-El sistema tiene como objetivo realizar la liquidación de salarios, bonificaciones, deducciones y novedades según la normativa laboral colombiana. Abarca el cálculo de salarios base, auxilio de transporte, horas extras, incapacidades, préstamos y otras deducciones, generando reportes detallados para cumplir con las obligaciones legales y laborales.
+El sistema tiene como objetivo realizar la liquidación de salarios, bonificaciones, deducciones y novedades según la normativa laboral colombiana. Abarca el cálculo de salarios base, auxilio de transporte, horas extras, préstamos y otras deducciones, generando reportes detallados para cumplir con las obligaciones legales y laborales.
 
 ### Alcance:
 El sistema cubre las siguientes áreas:
 - Cálculo de variables salariales.
-- Gestión de novedades legales (incapacidades, calamidad doméstica, festivos, ausencias, etc.).
-- Cálculo de préstamos y ahorros.
+- Gestión de novedades legales (horas extras).
+- Cálculo de préstamos y deducciones legales.
 - Generación de reportes (PDF, Excel) con el desglose de salarios y cumplimiento de las normativas colombianas.
 
----
 
 ## Variables de Entrada
 
@@ -26,14 +26,12 @@ El sistema cubre las siguientes áreas:
 
 ### Agenda y Novedades:
 1. **horarios** (lista de días/horas laborales): Información de los días y horas laborales del empleado.
-2. **novedades** (lista con tipo, fechas y horas afectadas): Incluye tipos de novedades como incapacidad, calamidad, festivos, ausencias, entre otras.
 3. **horas_extras** (cantidad y tipo: diurnas/nocturnas/festivas): Detalles de horas extras trabajadas, clasificados según el tipo (diurnas, nocturnas, festivas).
 
 ### Deducciones:
 1. **prestamos** (monto, cuotas, tasa de interés 6%): Préstamos del empleado, indicando el monto, el número de cuotas y la tasa de interés (6% anual).
-2. **ahorros** (monto fijo o porcentual): Ahorros del empleado, que pueden ser un monto fijo o un porcentaje de su salario.
 
----
+
 
 ## Variables de Salida
 
@@ -41,7 +39,7 @@ El sistema cubre las siguientes áreas:
 2. **desglose_pago**: Detalle de las horas extras, bonos, auxilio de transporte y deducciones.
 3. **reporte_legal**: Reporte con el cumplimiento de las normativas laborales en el cálculo de la liquidación.
 
----
+
 
 ## Fórmulas y Cálculos
 
@@ -52,7 +50,7 @@ $$
 \text{valor dia} = \frac{\text{salario base}}{30}
 $$
 
----
+
 
 ## Incapacidad y Calamidad
 
@@ -98,21 +96,55 @@ valor\_hora = \frac{salario\_base}{240}
 ```
 Esto supone una jornada de 8 horas diarias y 30 días laborales al mes.
 
-## Flujo del Proceso
+## Fondo de Solidaridad Pensional (FSP)
 
-1. **Carga de agenda inicial (horarios base):** Establecer los días y horas laborales del empleado.
-2. **Registro de novedades:** Se validan los tipos de novedades (incapacidad, festivo, etc.) y las fechas/horas afectadas.
-3. **Ajuste de agenda por festivos:** Los festivos son identificados y compensados automáticamente, ya sea con pago doble o con tiempo compensatorio.
-4. **Aprobación manual de horas extras:** El supervisor valida y aprueba las horas extras a través de una interfaz.
-5. **Cálculo automático de salario, bonos y deducciones:** El sistema calcula el salario neto considerando las horas extras, bonificaciones y deducciones.
-6. **Generación de reportes:** El sistema genera un reporte detallado (PDF/Excel) que incluye todos los cálculos realizados, destacando el cumplimiento de las normativas legales.
+El **Fondo de Solidaridad Pensional (FSP)** es una deducción aplicada a trabajadores con ingresos superiores a un umbral establecido por ley, destinada a subsidiar pensiones de personas con menores ingresos. Su cálculo se rige por el **Estatuto Tributario (Ley 1819 de 2016)** y se actualiza anualmente según la **Unidad de Valor Tributario (UVT)**.  
 
-## Consideraciones Legales Explícitas
+A continuación, te explicamos cómo se calcula el FSP en 2025:
 
-- **Ley 52 de 1975 (Festivos):** El pago por trabajo en festivos debe ser el doble del salario regular o con compensación de tiempo.
-- **Decreto 1072 de 2015 (Auxilio de Transporte):** El auxilio de transporte se debe descontar proporcionalmente durante las incapacidades.
-- **Código Sustantivo del Trabajo (Art. 134):** La calamidad doméstica debe ser tratada con 5 días de salario pagos.
-- **Intereses por Préstamos:** El interés por los préstamos no puede superar el 6% anual, de acuerdo con el Art. 884 del Código de Comercio.
+---
+
+###  Umbrales y porcentajes
+
+| **Rango de ingresos**       | **Porcentaje de deducción**  |
+|-----------------------------|----------------------------:|
+| Más de 4 UVT hasta 16 UVT   | 1% sobre el excedente       |
+| Más de 16 UVT               | 2% sobre el excedente       |
+
+---
+
+### Pasos para calcular el FSP en 2025
+
+#### 1. Obtener el valor de la UVT 2025  
+- La **UVT** se ajusta anualmente según el **Índice de Precios al Consumidor (IPC)**.  
+- En **2025**, 1 UVT = **$49,799 COP** *(ejemplo ilustrativo; para 2025, consulta el valor oficial en el **DIAN**).*
+- **Ejemplo hipotético:** Supongamos que en **2025**, **1 UVT = $49,700 COP**.
+
+---
+
+#### 2. Calcular los umbrales en pesos  
+- **4 UVT** = 4 × 49,700 = **198,800 COP**  
+- **16 UVT** = 16 × 49,700 = **795,200 COP**  
+
+---
+
+#### 3. Aplicar los porcentajes según el salario  
+Si el salario es **$1,000,000 COP** *(ejemplo):*
+- **Excedente sobre 4 UVT:**  
+  1,000,000 - 198,800  = **$801,200**  
+- **Excedente sobre 16 UVT:**  
+  1,000,000 - 795,200 = **$204,800**  
+
+---
+
+### Cálculo del FSP  
+- **1% sobre (801,200 - 204,800):**  
+  596,400 × 1% = **5,964 COP**  
+- **2% sobre (204,800):**  
+  204,800 × 2% = **4,096 COP**  
+
+** Total FSP: 5,964 + 4,096 = $10,060 COP**  
+
 
 ## Especificaciones Técnicas
 
@@ -129,56 +161,7 @@ Esto supone una jornada de 8 horas diarias y 30 días laborales al mes.
 
 - El sistema debe ofrecer una interfaz grafica web.
 
-# Fondo de Solidaridad Pensional (FSP)
 
-El **Fondo de Solidaridad Pensional (FSP)** es una deducción aplicada a trabajadores con ingresos superiores a un umbral establecido por ley, destinada a subsidiar pensiones de personas con menores ingresos. Su cálculo se rige por el **Estatuto Tributario (Ley 1819 de 2016)** y se actualiza anualmente según la **Unidad de Valor Tributario (UVT)**.  
-
-A continuación, te explicamos cómo se calcula el FSP en 2025:
-
----
-
-##  Umbrales y porcentajes
-
-| **Rango de ingresos**       | **Porcentaje de deducción**  |
-|-----------------------------|----------------------------:|
-| Más de 4 UVT hasta 16 UVT   | 1% sobre el excedente       |
-| Más de 16 UVT               | 2% sobre el excedente       |
-
----
-
-## Pasos para calcular el FSP en 2025
-
-### 1. Obtener el valor de la UVT 2025  
-- La **UVT** se ajusta anualmente según el **Índice de Precios al Consumidor (IPC)**.  
-- En **2025**, 1 UVT = **$49,799 COP** *(ejemplo ilustrativo; para 2025, consulta el valor oficial en el **DIAN**).*
-- **Ejemplo hipotético:** Supongamos que en **2025**, **1 UVT = $49,700 COP**.
-
----
-
-### 2. Calcular los umbrales en pesos  
-- **4 UVT** = 4 × 49,700 = **198,800 COP**  
-- **16 UVT** = 16 × 49,700 = **795,200 COP**  
-
----
-
-### 3. Aplicar los porcentajes según el salario  
-Si el salario es **$1,000,000 COP** *(ejemplo):*
-- **Excedente sobre 4 UVT:**  
-  1,000,000 - 198,800  = **$801,200**  
-- **Excedente sobre 16 UVT:**  
-  1,000,000 - 795,200 = **$204,800**  
-
----
-
-## Cálculo del FSP  
-- **1% sobre (801,200 - 204,800):**  
-  596,400 × 1% = **5,964 COP**  
-- **2% sobre (204,800):**  
-  204,800 × 2% = **4,096 COP**  
-
-** Total FSP: 5,964 + 4,096 = $10,060 COP**  
-
----
   
 ## Ejemplo de Caso de Uso
 
@@ -225,3 +208,44 @@ total\_horas\_extras = 5 \times 15,625 = 78,125
 #### Salario neto
 ```math
 salario\_neto = 3,000,000 - 200,000 - 9,333.33 - 88,333.33 + 78,125 = 2,780,458.34
+```
+
+
+
+## Documentación para la ejecución del programa y pruebas unitarias
+
+### Pasos para ejecutar el programa `main.py` desde la terminal de Windows:
+
+1. **Abrir la terminal de Windows**:
+  - Presiona `Win + R`, escribe `cmd` y presiona `Enter`.
+
+2. **Navegar al directorio del proyecto**:
+  - Utiliza el comando `cd` para cambiar al directorio donde se encuentra el archivo `main.py`. Por ejemplo:
+    ```sh
+    cd d:\Documentos\Programación\Proyectos Pycharm\Liquidador de Nomina\Liquidador-de-Nomina\src\view
+    ```
+
+3. **Ejecutar el programa**:
+  - Una vez en el directorio correcto, ejecuta el programa con el siguiente comando:
+    ```
+    python main.py
+    ```
+
+### Pasos para ejecutar las pruebas unitarias `test_nomina.py`:
+
+1. **Abrir la terminal de Windows**:
+  - Presiona `Win + R`, escribe `cmd` y presiona `Enter`.
+
+2. **Navegar al directorio del proyecto**:
+  - Utiliza el comando `cd` para cambiar al directorio donde se encuentra el archivo `test_nomina.py`. Por ejemplo:
+    ```sh
+    cd d:\Documentos\Programación\Proyectos Pycharm\Liquidador de Nomina\Liquidador-de-Nomina\test
+    ```
+
+3. **Ejecutar las pruebas unitarias**:
+  - Asegúrate de tener `unittest` disponible. Es parte de la biblioteca estándar de Python, por lo que no necesitas instalar nada adicional.
+  - Una vez en el directorio correcto, ejecuta las pruebas unitarias con el siguiente comando:
+    ```sh
+    python -m unittest test_nomina.py
+    ```
+  - `unittest` buscará y ejecutará las pruebas definidas en `test_nomina.py` y mostrará los resultados en la terminal.
