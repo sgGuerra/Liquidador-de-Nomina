@@ -6,7 +6,7 @@ class LimiteHorasExtraError(Exception):
     def __init__(self, horas_extra, horas_extras_adicionales):
         total_horas = horas_extra + horas_extras_adicionales
         super().__init__(
-            f"Error: El empleado ha ingresado un total de {total_horas} horas extra, "
+            f"El empleado ha ingresado un total de {total_horas} horas extra, "
             f"superando el límite de 50 horas extra mensuales."
         )
 
@@ -17,3 +17,7 @@ class TipoHoraExtraInvalidoError(Exception):
 class ValorHoraExtraNegativoError(Exception):
     def __init__(self, horas_extras):
         super().__init__(f"El valor de horas extra '{horas_extras}' no puede ser negativo. ingrese un valor entre 0-50")
+
+class SalarioBaseMenorMinimoError(Exception):
+    def __init__(self, salario_base, salario_minimo):
+        super().__init__(f"El salario base '{salario_base}' es menor que el salario mínimo legal vigente '{salario_minimo}' (Art. 145 CST)")

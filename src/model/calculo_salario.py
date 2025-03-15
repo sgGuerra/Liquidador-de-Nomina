@@ -1,7 +1,7 @@
 import sys
 sys.path.append("src")
 
-from model.excepciones import *  # Asegúrate de que las excepciones estén definidas en el módulo adecuado
+from model.excepciones import *  
 
 # Constantes
 SALARIO_MINIMO_LEGAL_VIGENTE = 1423500  # Salario mínimo legal vigente en 2025
@@ -91,6 +91,8 @@ class Nomina:
     def calcular(self):
         if self.salario_base <= 0:
             raise SalarioBaseNegativoError()
+        if self.salario_base < SALARIO_MINIMO_LEGAL_VIGENTE:
+            raise SalarioBaseMenorMinimoError(self.salario_base, SALARIO_MINIMO_LEGAL_VIGENTE)
 
         salario_bruto = self.calcular_salario_bruto()
         deducciones = self.calcular_deducciones()
@@ -111,7 +113,7 @@ class Nomina:
         if self.horas_extras_adicionales < 0:
             raise ValorHoraExtraNegativoError(self.horas_extras_adicionales)
 
-        if self.salario_base <= 2 * SMLV:
+        if self.salario_base <= 2 * SALARIO_MINIMO_LEGAL_VIGENTE:
             auxilio_transporte = AUXILIO_TRANSPORTE
         else:
             auxilio_transporte = 0
