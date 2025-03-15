@@ -277,8 +277,12 @@ Liquidador-de-Nomina/
 │   ├── test_nomina.py
 │   └── __init__.py
 │
+├── .gitignore
+├── LICENSE.txt
+├── Liquidador-de-Nómina.xlsx
 ├── README.md
 └── requirements.txt
+
 ```
 
 #### Descripción de Carpetas y Archivos
