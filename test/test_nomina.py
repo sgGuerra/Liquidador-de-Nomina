@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append("src")
-from model.calculo_salario import Nomina
+from model.calculo_nomina import Nomina
 from model.excepciones import *
 
 class CalculoSalarioTest(unittest.TestCase):
