@@ -266,11 +266,12 @@ Liquidador-de-Nomina/
 │   │   ├── excepciones.py
 │   │   └── __init__.py
 │   ├── view/
-│   │   ├── console/
-│   │   │   ├── main.py
-│   │   │   └── __init__.py
-│   │   └── __init__.py
+│   |    ├── console/
+│   |        ├── main.py
+│   |        └── __init__.py
+|   |
 │   └── __init__.py
+│   
 │
 ├── test/
 │   ├── test_nomina.py
