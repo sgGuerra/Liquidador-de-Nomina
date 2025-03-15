@@ -222,13 +222,13 @@ salario\_neto = 3,000,000 - 200,000 - 9,333.33 - 88,333.33 + 78,125 = 2,780,458.
 2. **Navegar al directorio del proyecto**:
   - Utiliza el comando `cd` para cambiar al directorio donde se encuentra el archivo `main.py`. Por ejemplo:
     ```sh
-    cd d:\Documentos\Programación\Proyectos Pycharm\Liquidador de Nomina\Liquidador-de-Nomina\src\view
+    cd d:\Documentos\Programación\Proyectos\Liquidador-de-Nomina
     ```
 
 3. **Ejecutar el programa**:
   - Una vez en el directorio correcto, ejecuta el programa con el siguiente comando:
     ```
-    python main.py
+    python src/view/console/main.py
     ```
 
 ### Pasos para ejecutar las pruebas unitarias `test_nomina.py`:
@@ -239,13 +239,13 @@ salario\_neto = 3,000,000 - 200,000 - 9,333.33 - 88,333.33 + 78,125 = 2,780,458.
 2. **Navegar al directorio del proyecto**:
   - Utiliza el comando `cd` para cambiar al directorio donde se encuentra el archivo `test_nomina.py`. Por ejemplo:
     ```sh
-    cd d:\Documentos\Programación\Proyectos Pycharm\Liquidador de Nomina\Liquidador-de-Nomina\test
+    cd d:\Documentos\Programación\Proyectos Pycharm\Liquidador de Nomina\Liquidador-de-Nomina
     ```
 
 3. **Ejecutar las pruebas unitarias**:
   - Asegúrate de tener `unittest` disponible. Es parte de la biblioteca estándar de Python, por lo que no necesitas instalar nada adicional.
   - Una vez en el directorio correcto, ejecuta las pruebas unitarias con el siguiente comando:
     ```sh
-    python -m unittest test_nomina.py
+    python test/test_nomina.py
     ```
   - `unittest` buscará y ejecutará las pruebas definidas en `test_nomina.py` y mostrará los resultados en la terminal.
