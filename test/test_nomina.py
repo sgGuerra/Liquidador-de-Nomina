@@ -1,6 +1,7 @@
 import unittest
 import sys
 sys.path.append("src")
+
 from model.calculo_nomina import Nomina
 from model.excepciones import *
 
@@ -238,6 +239,39 @@ class CalculoSalarioTest(unittest.TestCase):
                             tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
             nomina.calcular()
 
+    def test_cargo_invalido(self):
+        cargo = "Empleado nueva"
+        salario_base = 1680000
+        horas_extras = 20
+        tipo_hora_extra = "Nocturnas"
+        horas_extras_adicionales = 15
+        tipo_hora_extra_adicional = "Diurnas"
+        prestamo = 500000
+        cuotas = 10
+        tasa_interes = 6
 
+        with self.assertRaises(CargoInvalidoError):
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
+
+    def test_prestamo_negativo(self):
+        cargo = "Empleado antiguo"
+        salario_base = 2000000
+        horas_extras = 16
+        tipo_hora_extra = "Nocturnas"
+        horas_extras_adicionales = 20
+        tipo_hora_extra_adicional = "Diurnas"
+        prestamo = -400000
+        cuotas = 10
+        tasa_interes = 6
+        
+        with self.assertRaises(PrestamoNegativoError):
+            nomina = Nomina(cargo, salario_base, horas_extras, tipo_hora_extra, horas_extras_adicionales,
+                            tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
+            nomina.calcular()
+        
+        
+    
 if __name__ == '__main__':
     unittest.main()

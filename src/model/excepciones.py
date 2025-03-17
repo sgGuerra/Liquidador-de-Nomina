@@ -21,3 +21,11 @@ class ValorHoraExtraNegativoError(Exception):
 class SalarioBaseMenorMinimoError(Exception):
     def __init__(self, salario_base, salario_minimo):
         super().__init__(f"El salario base '{salario_base}' es menor que el salario mínimo legal vigente '{salario_minimo}' (Art. 145 CST)")
+        
+class CargoInvalidoError(Exception):
+    def __init__(self, cargo_opcion):
+        super().__init__(f"El cargo '{cargo_opcion}' no es válido. Ingrese: 1: Empleado nuevo, 2: Empleado antiguo, 3: Administrador")
+
+class PrestamoNegativoError(Exception):
+    def __init__(self, prestamo):
+        super().__init__(f"El valor del préstamo no puede ser negativo. Ingrese un valor mayor o igual a 0. valor ingresado: {prestamo}")

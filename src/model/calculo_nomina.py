@@ -11,6 +11,9 @@ PORCENTAJE_SALUD = 0.04  # Porcentaje de descuento de salud
 PORCENTAJE_PENSION = 0.04  # Porcentaje de descuento de pensión
 DIVISOR_HORAS_LABORALES = 240  # Número de horas trabajadas en un mes
 MAXIMO_HORAS_EXTRA_LEGALES_PERMITIDAS = 50  # Límite de horas extra legales
+SIN_HORAS_EXTRAS = 0
+SIN_PRESTAMO = 0
+SIN_CUOTAS = 1
 
 PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL = {
     "limite inferior": 0.01,
@@ -59,7 +62,7 @@ class Nomina:
         valor_hora_extra = self.calcular_valor_hora_extra(self.horas_extras, self.tipo_hora_extra)
 
         valor_hora_extra_adiccionales = 0
-        if self.horas_extras_adicionales > 0 and self.tipo_hora_extra_adicional != "N/A":
+        if self.horas_extras_adicionales > SIN_HORAS_EXTRAS and self.tipo_hora_extra_adicional != "N/A":
             valor_hora_extra_adiccionales = self.calcular_valor_hora_extra(self.horas_extras_adicionales, self.tipo_hora_extra_adicional)
         
         return self.salario_base + bonificacion + valor_hora_extra + valor_hora_extra_adiccionales
@@ -69,7 +72,7 @@ class Nomina:
         pension = self.salario_base * PORCENTAJE_PENSION
         tasa_interes_anual = (1 + (self.tasa_interes / 100))
 
-        if self.cuotas <= 1:
+        if self.cuotas <= SIN_CUOTAS:
             reporte_prestamo = self.prestamo
         else:
             reporte_prestamo = (self.prestamo * tasa_interes_anual) / self.cuotas
@@ -94,6 +97,12 @@ class Nomina:
         if self.salario_base < SALARIO_MINIMO_LEGAL_VIGENTE:
             raise SalarioBaseMenorMinimoError(self.salario_base, SALARIO_MINIMO_LEGAL_VIGENTE)
 
+        if self.cargo not in BONIFICACIONES_POR_CARGO:
+            raise CargoInvalidoError(self.cargo)
+        
+        if self.prestamo < SIN_PRESTAMO:
+            raise PrestamoNegativoError(self.prestamo)
+    
         salario_bruto = self.calcular_salario_bruto()
         deducciones = self.calcular_deducciones()
         impuestos = self.calcular_impuestos(salario_bruto)
