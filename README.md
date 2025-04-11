@@ -315,3 +315,47 @@ El proyecto no tiene dependencias externas adicionales a las bibliotecas estánd
 - **test**: Contiene las pruebas unitarias para asegurar la calidad del código.
 
 Esta organización modular permite una fácil extensión y mantenimiento del proyecto, asegurando que cada componente tenga una responsabilidad clara y definida.
+
+
+Perfecto, entonces actualizo el `README.md` para que la instrucción de ejecución sea clara con la nueva ruta del archivo principal (`src/view/console/GUI.py`). Aquí tienes la versión actualizada:
+
+---
+
+# Liquidador de Nómina (Kivy)
+
+Aplicación gráfica desarrollada en **Python + Kivy** para calcular la nómina de un empleado según diferentes parámetros como salario base, horas extras, tipo de hora, préstamos, cuotas e intereses.
+
+---
+
+## Requisitos
+
+- Python 3.7 o superior
+- Kivy (`pip install kivy`)
+---
+
+## Instrucciones para ejecutar
+
+1. **Clona o descarga el proyecto**
+
+2. **Instala las dependencias**
+
+```bash
+pip install kivy
+```
+
+3. **Ejecuta la aplicación**
+
+Desde la raíz del proyecto, corre:
+
+```bash
+python src/view/console/GUI.py
+```
+
+---
+
+
+## Autores interfaz
+
+- Mileidy Vanegas
+- Miguel Martínez
+---
