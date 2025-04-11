@@ -1,0 +1,6 @@
+C:\AppData\Local\Programs\Python\Python313\python.exe -m pip install kivy[base] kivy_examples
+
+O con entorno virtual:
+python -m venv venv
+.\venv\Scripts\activate
+pip install kivy
