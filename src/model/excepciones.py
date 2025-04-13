@@ -1,3 +1,7 @@
+class SalarioBaseInexistente(Exception):
+    def __init__(self):
+        super().__init__("Ingrese un valor válido en el campo de salario base.")
+
 class SalarioBaseNegativoError(Exception):
     def __init__(self):
         super().__init__("El Salario base del empleado no puede ser negativo (Art. 127 CST)")
