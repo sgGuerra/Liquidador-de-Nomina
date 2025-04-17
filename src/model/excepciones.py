@@ -1,6 +1,6 @@
 class SalarioBaseInexistente(Exception):
     def __init__(self):
-        super().__init__("Ingrese un valor válido en el campo de salario base.")
+        super().__init__("Ingrese su salario en el campo de salario base.")
 
 class SalarioBaseNegativoError(Exception):
     def __init__(self):
@@ -16,7 +16,9 @@ class LimiteHorasExtraError(Exception):
 
 class TipoHoraExtraInvalidoError(Exception):
     def __init__(self, tipo_hora_extra):
-        super().__init__(f"El tipo de hora extra '{tipo_hora_extra}' no es válido. Ingrese: (Diurnas, Nocturnas, Festivas)")
+        super().__init__(f"El tipo de hora extra '{tipo_hora_extra}' no es válido." 
+                         f"Ingrese: (Diurnas, Nocturnas, Festivas"
+        )
 
 class ValorHoraExtraNegativoError(Exception):
     def __init__(self, horas_extras):
