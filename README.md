@@ -348,7 +348,7 @@ pip install kivy
 Desde la raíz del proyecto, corre:
 
 ```bash
-python src/view/console/GUI.py
+python src/view/GUI/GUI.py
 ```
 
 ---
