@@ -92,7 +92,9 @@ class Nomina:
                    (salario_bruto - limite_superior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite superior", 0)
 
     def calcular(self):
-        if self.salario_base <= 0:
+        if self.salario_base == 0.0:
+            raise SalarioBaseInexistente()
+        if self.salario_base < 0:
             raise SalarioBaseNegativoError()
         if self.salario_base < SALARIO_MINIMO_LEGAL_VIGENTE:
             raise SalarioBaseMenorMinimoError(self.salario_base, SALARIO_MINIMO_LEGAL_VIGENTE)
