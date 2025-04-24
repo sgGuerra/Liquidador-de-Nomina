@@ -345,13 +345,14 @@ pip install kivy
 
 3. **Ejecuta la aplicación**
 
-Desde la raíz del proyecto, corre:
+- Desde la raíz del proyecto, corre:
 
 ```bash
 python src/view/GUI/GUI.py
 ```
 
 ---
+- Desde la carpeta raiz del proyecto tambien puede ejecutar GUI.exe en la ruta dist\GUI
 
 
 ## Autores interfaz
