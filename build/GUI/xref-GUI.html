@@ -18,8 +18,7 @@
   <a target="code" href="///C:/Users/pinil/Desktop/Liquidador-de-Nomina-FORK/src/view/GUI/GUI.py" type="text/plain"><tt>GUI.py</tt></a>
 <span class="moduletype">Script</span>  <div class="import">
 imports:
-    <a href="#'model.excepciones'">'model.excepciones'</a>
- &#8226;   <a href="#_collections_abc">_collections_abc</a>
+    <a href="#_collections_abc">_collections_abc</a>
  &#8226;   <a href="#_weakrefset">_weakrefset</a>
  &#8226;   <a href="#abc">abc</a>
  &#8226;   <a href="#codecs">codecs</a>
@@ -163,7 +162,8 @@ imports:
  &#8226;   <a href="#kivy.uix.textinput">kivy.uix.textinput</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
- &#8226;   <a href="#model">model</a>
+ &#8226;   <a href="#model.calculo_nomina">model.calculo_nomina</a>
+ &#8226;   <a href="#model.excepciones">model.excepciones</a>
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
@@ -478,8 +478,8 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'gi.repository'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#kivy.core.clipboard.clipboard_gtk3">kivy.core.clipboard.clipboard_gtk3</a>
- &#8226;   <a href="#kivy.support">kivy.support</a>
+    <a href="#kivy.core.camera.camera_gi">kivy.core.camera.camera_gi</a>
+ &#8226;   <a href="#kivy.core.clipboard.clipboard_gtk3">kivy.core.clipboard.clipboard_gtk3</a>
 
   </div>
 
@@ -502,17 +502,6 @@ imported by:
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#kivy.core.text.text_pango">kivy.core.text.text_pango</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="'model.excepciones'"></a>
-  <a target="code" href="" type="text/plain"><tt>'model.excepciones'</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#GUI.py">GUI.py</a>
 
   </div>
 
@@ -14294,8 +14283,8 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>gi</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#kivy.core.camera.camera_gi">kivy.core.camera.camera_gi</a>
- &#8226;   <a href="#kivy.core.clipboard.clipboard_gtk3">kivy.core.clipboard.clipboard_gtk3</a>
+    <a href="#kivy.core.clipboard.clipboard_gtk3">kivy.core.clipboard.clipboard_gtk3</a>
+ &#8226;   <a href="#kivy.support">kivy.support</a>
 
   </div>
 
@@ -16684,9 +16673,9 @@ imported by:
   <a target="code" href="///C:/Users/pinil/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0/LocalCache/local-packages/Python313/site-packages/kivy/core/camera/camera_gi.py" type="text/plain"><tt>kivy.core.camera.camera_gi</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#atexit">atexit</a>
+    <a href="#'gi.repository'">'gi.repository'</a>
+ &#8226;   <a href="#atexit">atexit</a>
  &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#gi">gi</a>
  &#8226;   <a href="#kivy.clock">kivy.clock</a>
  &#8226;   <a href="#kivy.core.camera">kivy.core.camera</a>
  &#8226;   <a href="#kivy.graphics.texture">kivy.graphics.texture</a>
@@ -17044,6 +17033,7 @@ imports:
  &#8226;   <a href="#kivy.clock">kivy.clock</a>
  &#8226;   <a href="#kivy.compat">kivy.compat</a>
  &#8226;   <a href="#kivy.core">kivy.core</a>
+ &#8226;   <a href="#kivy.core.image._img_sdl2">kivy.core.image._img_sdl2</a>
  &#8226;   <a href="#kivy.event">kivy.event</a>
  &#8226;   <a href="#kivy.graphics.texture">kivy.graphics.texture</a>
  &#8226;   <a href="#kivy.logger">kivy.logger</a>
@@ -17088,6 +17078,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#kivy">kivy</a>
+ &#8226;   <a href="#kivy.core.image">kivy.core.image</a>
  &#8226;   <a href="#kivy.core.image.img_sdl2">kivy.core.image.img_sdl2</a>
 
   </div>
@@ -19768,9 +19759,9 @@ imported by:
   <a target="code" href="///C:/Users/pinil/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0/LocalCache/local-packages/Python313/site-packages/kivy/support.py" type="text/plain"><tt>kivy.support</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'gi.repository'">'gi.repository'</a>
- &#8226;   <a href="#android">android</a>
+    <a href="#android">android</a>
  &#8226;   <a href="#collections">collections</a>
+ &#8226;   <a href="#gi">gi</a>
  &#8226;   <a href="#gobject">gobject</a>
  &#8226;   <a href="#kivy">kivy</a>
  &#8226;   <a href="#kivy.app">kivy.app</a>
@@ -21926,10 +21917,46 @@ imported by:
 
 <div class="node">
   <a name="model"></a>
-  <a target="code" href="" type="text/plain"><tt>model</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
+  <a target="code" href="///C:/Users/pinil/Desktop/Liquidador-de-Nomina-FORK/src/model/__init__.py" type="text/plain"><tt>model</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imported by:
+    <a href="#model.calculo_nomina">model.calculo_nomina</a>
+ &#8226;   <a href="#model.excepciones">model.excepciones</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="model.calculo_nomina"></a>
+  <a target="code" href="///C:/Users/pinil/Desktop/Liquidador-de-Nomina-FORK/src/model/calculo_nomina.py" type="text/plain"><tt>model.calculo_nomina</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#model">model</a>
+ &#8226;   <a href="#model.excepciones">model.excepciones</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
 imported by:
     <a href="#GUI.py">GUI.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="model.excepciones"></a>
+  <a target="code" href="///C:/Users/pinil/Desktop/Liquidador-de-Nomina-FORK/src/model/excepciones.py" type="text/plain"><tt>model.excepciones</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#model">model</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#GUI.py">GUI.py</a>
+ &#8226;   <a href="#model.calculo_nomina">model.calculo_nomina</a>
 
   </div>
 
@@ -44799,6 +44826,7 @@ imported by:
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
+ &#8226;   <a href="#model.calculo_nomina">model.calculo_nomina</a>
  &#8226;   <a href="#multiprocessing">multiprocessing</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.context">multiprocessing.context</a>

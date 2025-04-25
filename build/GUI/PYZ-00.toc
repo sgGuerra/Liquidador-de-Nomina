@@ -1928,6 +1928,15 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.752.0_x64__qbz5n2kfra8p0\\Lib\\mimetypes.py',
    'PYMODULE'),
+  ('model',
+   'C:\\Users\\pinil\\Desktop\\Liquidador-de-Nomina-FORK\\src\\model\\__init__.py',
+   'PYMODULE'),
+  ('model.calculo_nomina',
+   'C:\\Users\\pinil\\Desktop\\Liquidador-de-Nomina-FORK\\src\\model\\calculo_nomina.py',
+   'PYMODULE'),
+  ('model.excepciones',
+   'C:\\Users\\pinil\\Desktop\\Liquidador-de-Nomina-FORK\\src\\model\\excepciones.py',
+   'PYMODULE'),
   ('multiprocessing',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.752.0_x64__qbz5n2kfra8p0\\Lib\\multiprocessing\\__init__.py',
