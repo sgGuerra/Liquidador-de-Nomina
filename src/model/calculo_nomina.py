@@ -1,7 +1,8 @@
 import sys
 sys.path.append("src")
 
-from model.excepciones import *  
+from model.excepciones import * 
+from model.clase_empleado import Empleado 
 
 # Constantes
 SALARIO_MINIMO_LEGAL_VIGENTE = 1423500  # Salario mínimo legal vigente en 2025
@@ -37,9 +38,11 @@ FACTORES_HORA_EXTRA = {
 
 
 class Nomina:
-    def __init__(self, cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", 
+    def __init__(self,  cedula_empelado: str, nombre_empleado: str, empleado_apellido, cargo, salario_base, horas_extras=0, tipo_hora_extra="N/A", 
                  horas_extras_adicionales=0, tipo_hora_extra_adicional="N/A", 
                  prestamo=0, cuotas=0, tasa_interes=6):
+        
+        self.empleado = Empleado(cedula_empelado,nombre_empleado,empleado_apellido)
         self.cargo = cargo
         self.salario_base = salario_base
         self.horas_extras = horas_extras
