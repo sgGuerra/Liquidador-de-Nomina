@@ -1,4 +1,4 @@
-create table horas_extras (
+create table if not exists horas_extras (
   id_hora_extra serial not null,
   id_empleado varchar(11),
   id_tipo_hora varchar(20),
