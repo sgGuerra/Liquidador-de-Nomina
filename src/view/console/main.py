@@ -21,6 +21,31 @@ class ConsolaNomina:
         self.prestamo = None
         self.cuotas = None
         self.tasa_interes_anual = None
+        self.cedula = None
+        self.nombres = None
+        self.apellidos = None
+
+    def _solicitar_datos_personales(self):
+        """
+        Solicita al usuario los datos personales del empleado.
+        """
+        while True:
+            try:
+                self.cedula = input("Ingrese la cédula del empleado: ").strip()
+                if not self.cedula:
+                    raise ValueError("La cédula no puede estar vacía.")
+
+                self.nombres = input("Ingrese los nombres del empleado: ").strip()
+                if not self.nombres:
+                    raise ValueError("Los nombres no pueden estar vacíos.")
+
+                self.apellidos = input("Ingrese los apellidos del empleado: ").strip()
+                if not self.apellidos:
+                    raise ValueError("Los apellidos no pueden estar vacíos.")
+
+                break
+            except ValueError as e:
+                print(f"Error: {e}")
     
     def _solicitar_cargo(self):
         """
@@ -168,6 +193,7 @@ class ConsolaNomina:
     def procesar_nomina(self):
         print("\n------------------------------------------\nBienvenido al sistema de cálculo de nómina\n------------------------------------------\n")
         while True:
+            self._solicitar_datos_personales()
             self._solicitar_cargo()
             self._solicitar_salario_base()
             self._solicitar_horas_extras()
@@ -185,13 +211,16 @@ class ConsolaNomina:
         self.mostrar_resultados()
 
     def _calcular_nomina(self):
-        nomina = Nomina(self.cargo, self.salario_base, self.horas_extras, self.tipo_hora_extra, self.horas_extras_adicionales, self.tipo_hora_extra_adicional, self.prestamo, self.cuotas, self.tasa_interes_anual)
+        nomina = Nomina(self.cedula, self.nombres, self.apellidos, self.cargo, self.salario_base, self.horas_extras, self.tipo_hora_extra, self.horas_extras_adicionales, self.tipo_hora_extra_adicional, self.prestamo, self.cuotas, self.tasa_interes_anual)
         salario_neto = nomina.calcular()
         bonificacion = nomina.calcular_bonificacion()
         valor_horas_extra = nomina.calcular_valor_hora_extra(self.horas_extras, self.tipo_hora_extra)
         valor_horas_extra_adicionales = nomina.calcular_valor_hora_extra(self.horas_extras_adicionales, self.tipo_hora_extra_adicional)
         total_horas_extra = (valor_horas_extra * self.horas_extras) + (valor_horas_extra_adicionales * self.horas_extras_adicionales)
         self.resultados.append({
+            "cedula": self.cedula,
+            "nombres": self.nombres,
+            "apellidos": self.apellidos,
             "cargo": self.cargo,
             "salario_base": self.salario_base,
             "bonificacion": bonificacion,       
@@ -210,6 +239,9 @@ class ConsolaNomina:
         print("\nFactura de Nóminas Calculadas:")
         for i, resultado in enumerate(self.resultados, 1):
             print(f"\nEmpleado {i}:")
+            print(f"  Cédula: {resultado['cedula']}")
+            print(f"  Nombres: {resultado['nombres']}")
+            print(f"  Apellidos: {resultado['apellidos']}")
             print(f"  Cargo: {resultado['cargo']}")
             print(f"  Salario Base: ${resultado['salario_base']:.2f}")
             print(f"  Bonificación por cargo: ${resultado['bonificacion']:.2f}")

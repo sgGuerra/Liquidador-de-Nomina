@@ -27,6 +27,19 @@ class NominaGUI(BoxLayout):
 
         # Campos del formulario con ejemplos como hint_text
         campos = [
+            ("Cédula", TextInput(
+                input_filter='int',
+                multiline=False,
+                hint_text="Ej: 1234567890"
+            )),
+            ("Nombres", TextInput(
+                multiline=False,
+                hint_text="Ej: Juan Carlos"
+            )),
+            ("Apellidos", TextInput(
+                multiline=False,
+                hint_text="Ej: Pérez Gómez"
+            )),
             ("Cargo", Spinner(
                 values=["Empleado nuevo", "Empleado antiguo", "Administrador"],
                 text="Empleado nuevo"
@@ -99,6 +112,9 @@ class NominaGUI(BoxLayout):
 
             # Se crea una instancia de Nomina con los valores ingresados por el usuario
             nomina = Nomina(
+                cedula_empelado=data["Cédula"].text,
+                nombre_empleado=data["Nombres"].text,
+                empleado_apellido=data["Apellidos"].text,
                 cargo=data["Cargo"].text,
                 salario_base=float(data["Salario Base"].text or 0),
                 horas_extras=float(data["Horas Extras"].text or 0),
@@ -119,6 +135,9 @@ class NominaGUI(BoxLayout):
             # Mostrar los resultados
             self.resultado_label.text = f"""
 Resultado de Nómina:
+Cédula: {nomina.empleado.cedula}
+Nombres: {nomina.empleado.nombres}
+Apellidos: {nomina.empleado.apellidos}
 Cargo: {nomina.cargo}
 Salario Base: ${nomina.salario_base:,.2f}
 Bonificación: ${bonificacion:,.2f}
