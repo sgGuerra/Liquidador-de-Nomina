@@ -1,5 +1,11 @@
 import sys
-sys.path.append("src")  # Agrega el directorio "src" al path para poder importar módulos personalizados
+import os
+
+# Permite que encuentre correctamente el paquete model al compilar con PyInstaller
+if hasattr(sys, '_MEIPASS'):
+    sys.path.append(os.path.join(sys._MEIPASS, "src"))
+else:
+    sys.path.append("src")
 
 from kivy.app import App
 from kivy.uix.label import Label
