@@ -7,6 +7,7 @@ ENV/
 env.bak/
 venv.bak/
 .vscode
+SecretConfig.py
 
 # Byte-compiled / optimized / DLL files
 
@@ -17,5 +18,6 @@ __pycache__/
 
 # Cython debug symbols
 cython_debug/
+
 
 .idea/
