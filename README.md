@@ -4,6 +4,25 @@
 
 - Santiago Alcaraz Durango
 - Luis Carlos Guerra Herrera 
+
+## Instalación
+
+### Instalación de Kivy
+
+Hay dos formas de instalar Kivy:
+
+1. **Instalación global:**
+```
+C:\AppData\Local\Programs\Python\Python313\python.exe -m pip install kivy[base] kivy_examples
+```
+
+2. **Instalación con entorno virtual (recomendado):**
+```
+python -m venv venv
+.\venv\Scripts\activate
+pip install kivy
+```
+
 ## Descripción General
 
 ### Propósito del sistema:
@@ -196,7 +215,7 @@ cuota\_mensual = \frac{monto\_prestamo \times (1 + 0.06)}{cuotas\_restantes} = \
 
 #### Horas extras diurnas (5 horas)
 ```math
-valor\_hora = \frac{salario\_base}{240} = \frac{3,000,000}{240} = 12,500
+valor\_hora = \frac{salario\\_base}{240} = \frac{3,000,000}{240} = 12,500
 ```
 ```math
 valor\_hora\_extra = valor\_hora \times 1.25 = 12,500 \times 1.25 = 15,625
