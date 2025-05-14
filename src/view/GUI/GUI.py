@@ -18,6 +18,8 @@ from kivy.uix.popup import Popup
 
 from model.calculo_nomina import Nomina
 from model.excepciones import *
+from controller.nomina_controller import NominaController
+from controller.tipo_hora_extra_controller import TipoHoraExtraController
 
 class NominaGUI(BoxLayout):
     def __init__(self, **kwargs):
@@ -98,45 +100,91 @@ class NominaGUI(BoxLayout):
 
         self.add_widget(form)  # Se agrega el formulario completo al layout principal
 
+        # Área de botones
+        button_layout = BoxLayout(orientation='horizontal', spacing=10, size_hint=(1, 0.1))
+        
         # Botón para calcular la nómina
-        btn = Button(text="Calcular Nómina", size_hint=(1, 0.1), background_color=(0.2, 0.6, 0.8, 1))
-        btn.bind(on_press=self.calcular_nomina)
-        self.add_widget(btn)
+        btn_calcular = Button(text="Calcular Nómina", background_color=(0.2, 0.6, 0.8, 1))
+        btn_calcular.bind(on_press=self.calcular_nomina)
+        button_layout.add_widget(btn_calcular)
+        
+        # Botón para modificar empleado
+        btn_modificar = Button(text="Modificar Empleado", background_color=(0.8, 0.6, 0.2, 1))
+        btn_modificar.bind(on_press=self.modificar_empleado)
+        button_layout.add_widget(btn_modificar)
+        
+        self.add_widget(button_layout)
 
         # Área de resultados
         self.resultado_label = Label(text="", halign='left', valign='top', size_hint=(1, 0.5))
         self.resultado_label.bind(size=self.resultado_label.setter('text_size'))
         self.add_widget(self.resultado_label)
 
+    def mostrar_popup(self, titulo, mensaje):
+        """Muestra un popup con un mensaje"""
+        Popup(title=titulo, content=Label(text=mensaje), size_hint=(0.8, 0.3)).open()
+
+    def validar_campos_requeridos(self):
+        """Valida que los campos requeridos no estén vacíos"""
+        campos_requeridos = ["Cédula", "Nombres", "Apellidos", "Cargo", "Salario Base"]
+        for campo in campos_requeridos:
+            if not self.inputs[campo].text.strip():
+                raise ValueError(f"El campo {campo} es requerido")
+
+    def crear_objeto_nomina(self):
+        """Crea y retorna un objeto Nomina con los datos del formulario"""
+        data = self.inputs
+        return Nomina(
+            cedula_empleado=data["Cédula"].text,
+            nombre_empleado=data["Nombres"].text,
+            empleado_apellido=data["Apellidos"].text,
+            cargo=data["Cargo"].text,
+            salario_base=float(data["Salario Base"].text or 0),
+            horas_extras=float(data["Horas Extras"].text or 0),
+            tipo_hora_extra=data["Tipo Hora Extra"].text,
+            horas_extras_adicionales=float(data["Horas Extras Adicionales"].text or 0),
+            tipo_hora_extra_adicional=data["Tipo Hora Extra Adicional"].text,
+            prestamo=float(data["Préstamo"].text or 0),
+            cuotas=int(data["Cuotas"].text or 0),
+            tasa_interes=float(data["Tasa de Interés (%)"].text or 0)
+        )
+
+    def modificar_empleado(self, instance):
+        """Modifica un empleado existente en la base de datos"""
+        try:
+            self.validar_campos_requeridos()
+            nomina = self.crear_objeto_nomina()
+            
+            if NominaController.ModificarNomina(nomina):
+                self.mostrar_popup("Éxito", "Nómina modificada correctamente")
+                self.calcular_nomina(None)  # Actualiza los resultados
+            
+        except Exception as e:
+            self.mostrar_popup("Error", str(e))
+
     def calcular_nomina(self, instance):
         """
-        Método que recoge los datos del formulario, crea un objeto Nomina y muestra los resultados.
+        Método que recoge los datos del formulario, crea un objeto Nomina,
+        calcula y guarda o actualiza en la base de datos y muestra los resultados.
         También maneja excepciones mostrando un popup en caso de error.
         """
         try:
-            data = self.inputs
-
-            # Se crea una instancia de Nomina con los valores ingresados por el usuario
-            nomina = Nomina(
-                cedula_empleado=data["Cédula"].text,
-                nombre_empleado=data["Nombres"].text,
-                empleado_apellido=data["Apellidos"].text,
-                cargo=data["Cargo"].text,
-                salario_base=float(data["Salario Base"].text or 0),
-                horas_extras=float(data["Horas Extras"].text or 0),
-                tipo_hora_extra=data["Tipo Hora Extra"].text,
-                horas_extras_adicionales=float(data["Horas Extras Adicionales"].text or 0),
-                tipo_hora_extra_adicional=data["Tipo Hora Extra Adicional"].text,
-                prestamo=float(data["Préstamo"].text or 0),
-                cuotas=int(data["Cuotas"].text or 0),
-                tasa_interes=float(data["Tasa de Interés (%)"].text or 0)
-            )
+            self.validar_campos_requeridos()
+            nomina = self.crear_objeto_nomina()
 
             # Se realizan los cálculos
             salario_neto = nomina.calcular()
             bonificacion = nomina.calcular_bonificacion()
             valor_extra = nomina.calcular_valor_hora_extra(nomina.horas_extras, nomina.tipo_hora_extra)
             valor_extra_adicional = nomina.calcular_valor_hora_extra(nomina.horas_extras_adicionales, nomina.tipo_hora_extra_adicional)
+
+            # Intentar actualizar primero, si no existe insertarlo como nuevo
+            try:
+                NominaController.ModificarNomina(nomina)
+                self.mostrar_popup("Éxito", "Nómina actualizada y guardada correctamente")
+            except ValueError:  # Si el empleado no existe
+                NominaController.InsertarNomina(nomina)
+                self.mostrar_popup("Éxito", "Nueva nómina guardada correctamente")
 
             # Mostrar los resultados
             self.resultado_label.text = f"""
@@ -151,11 +199,13 @@ Valor Horas Extra: ${valor_extra:,.2f}
 Valor Horas Extra Adicionales: ${valor_extra_adicional:,.2f}
 Salario Neto: ${salario_neto:,.2f}"""
         except Exception as e:
-            Popup(title="Error", content=Label(text=str(e)), size_hint=(0.8, 0.3)).open()
+            self.mostrar_popup("Error", str(e))
 
 # Clase principal de la app
 class NominaApp(App):
     def build(self):
+        """Construye la interfaz de la aplicación"""
+        self.title = "Liquidación de Nómina"
         return NominaGUI()
 
 # Punto de entrada

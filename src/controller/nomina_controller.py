@@ -24,7 +24,7 @@ class NominaController:
         cursor.connection.commit()
            
     @staticmethod
-    def InsertarEmpleado(nomina: Nomina):
+    def InsertarNomina(nomina: Nomina):
         """
         Inserta un nuevo empleado con su cargo y horas extras
         Args:
@@ -111,10 +111,9 @@ class NominaController:
         except Exception as e:
             cursor.connection.rollback()
             raise e
-        finally:
-            cursor.connection.close()
+        
     
-    def ModificarEmpleado(nomina: Nomina) -> bool:
+    def ModificarNomina(nomina: Nomina) -> bool:
         """
         Modifica los datos de un empleado existente en la base de datos.
         
@@ -245,9 +244,8 @@ class NominaController:
         except Exception as e:
             cursor.connection.rollback()
             raise e
-        finally:
-            cursor.connection.close()
-
+          
+    
     @staticmethod
     def Obtener_cursor():
         connection = psycopg2.connect(
@@ -260,4 +258,4 @@ class NominaController:
         cursor = connection.cursor()
         return cursor
 
-   
+
