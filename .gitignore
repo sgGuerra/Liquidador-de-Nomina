@@ -23,4 +23,3 @@ cython_debug/
 .idea/
 GUI.spec
 build/
-kivi install.spec

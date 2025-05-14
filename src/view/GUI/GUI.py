@@ -118,7 +118,7 @@ class NominaGUI(BoxLayout):
 
             # Se crea una instancia de Nomina con los valores ingresados por el usuario
             nomina = Nomina(
-                cedula_empelado=data["Cédula"].text,
+                cedula_empleado=data["Cédula"].text,
                 nombre_empleado=data["Nombres"].text,
                 empleado_apellido=data["Apellidos"].text,
                 cargo=data["Cargo"].text,
