@@ -5,12 +5,11 @@ sys.path.append("src")
 import psycopg2
 from model.calculo_nomina import Nomina
 import SecretConfig
-from datetime import datetime
 
-class EmpleadoController:
+class NominaController:
     @staticmethod
     def CrearTabla():
-        cursor = EmpleadoController.Obtener_cursor()
+        cursor = NominaController.Obtener_cursor()
         with open("sql/tabla_empleados.sql", "r") as sql_file:
             consulta = sql_file.read()
         cursor.execute(consulta)
@@ -18,7 +17,7 @@ class EmpleadoController:
 
     @staticmethod
     def BorrarTabla():
-        cursor = EmpleadoController.Obtener_cursor()
+        cursor = NominaController.Obtener_cursor()
         with open("sql/borrar_empleados.sql", "r") as sql_file:
             consulta = sql_file.read()
         cursor.execute(consulta)
@@ -31,7 +30,7 @@ class EmpleadoController:
         Args:
             nomina: Objeto Nomina con todos los datos necesarios
         """
-        cursor = EmpleadoController.Obtener_cursor()
+        cursor = NominaController.Obtener_cursor()
         try:
             # 1. Buscar el ID del cargo
             cursor.execute("SELECT id FROM cargos WHERE cargo_empleado = %s", (nomina.cargo,))
@@ -129,7 +128,7 @@ class EmpleadoController:
             ValueError: Si no existe el empleado, cargo o tipo de hora extra
             Exception: Para otros errores de base de datos
         """
-        cursor = EmpleadoController.Obtener_cursor()
+        cursor = NominaController.Obtener_cursor()
         try:
             # 1. Verificar que el empleado existe
             cursor.execute("SELECT cedula FROM empleados WHERE cedula = %s", (nomina.empleado.cedula,))
