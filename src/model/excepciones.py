@@ -35,3 +35,31 @@ class CargoInvalidoError(Exception):
 class PrestamoNegativoError(Exception):
     def __init__(self, prestamo):
         super().__init__(f"El valor del préstamo no puede ser negativo. Ingrese un valor mayor o igual a 0. valor ingresado: {prestamo}")
+
+class CargoNoExistenteError(Exception):
+    def __init__(self, cargo):
+        super().__init__(f"No existe un cargo con el nombre '{cargo}' en la base de datos")
+
+class TipoHoraExtraNoExistenteError(Exception):
+    def __init__(self, tipo_hora):
+        super().__init__(f"No existe el tipo de hora extra '{tipo_hora}' en la base de datos")
+
+class EmpleadoNoExistenteError(Exception):
+    def __init__(self, cedula):
+        super().__init__(f"No existe un empleado con cédula '{cedula}' en la base de datos")
+
+class EmpleadoExistenteError(Exception):
+    def __init__(self, cedula):
+        super().__init__(f"Ya existe un empleado con la cédula {cedula}. Use el botón 'Modificar Empleado' para actualizar sus datos.")
+
+class CedulaInvalidaError(Exception):
+    def __init__(self):
+        super().__init__("La cédula debe contener solo números y tener entre 8 y 10 dígitos")
+
+class NombreInvalidoError(Exception):
+    def __init__(self):
+        super().__init__("El nombre debe contener solo letras y espacios")
+
+class ApellidoInvalidoError(Exception):
+    def __init__(self):
+        super().__init__("El apellido debe contener solo letras y espacios")

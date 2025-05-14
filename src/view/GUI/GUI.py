@@ -34,12 +34,15 @@ class NominaGUI(BoxLayout):
         form = GridLayout(cols=2, spacing=10, size_hint=(1, 1.5))
 
         # Campos del formulario con ejemplos como hint_text
+        cedula_input = TextInput(
+            input_filter='int',
+            multiline=False,
+            hint_text="Ej: 1234567890"
+        )
+        cedula_input.bind(text=self.on_cedula_cambio)  # Vinculamos el evento de cambio de texto
+
         campos = [
-            ("Cédula", TextInput(
-                input_filter='int',
-                multiline=False,
-                hint_text="Ej: 1234567890"
-            )),
+            ("Cédula", cedula_input),
             ("Nombres", TextInput(
                 multiline=False,
                 hint_text="Ej: Juan Carlos"
@@ -108,17 +111,23 @@ class NominaGUI(BoxLayout):
         btn_calcular.bind(on_press=self.calcular_nomina)
         button_layout.add_widget(btn_calcular)
         
-        # Botón para modificar empleado
-        btn_modificar = Button(text="Modificar Empleado", background_color=(0.8, 0.6, 0.2, 1))
-        btn_modificar.bind(on_press=self.modificar_empleado)
-        button_layout.add_widget(btn_modificar)
-        
         self.add_widget(button_layout)
 
         # Área de resultados
         self.resultado_label = Label(text="", halign='left', valign='top', size_hint=(1, 0.5))
         self.resultado_label.bind(size=self.resultado_label.setter('text_size'))
         self.add_widget(self.resultado_label)
+
+    def on_cedula_cambio(self, instance, value):
+        """Limita la longitud de la cédula entre 8 y 10 dígitos y valida que solo sean números"""
+        if value:  # Solo si hay valor
+            # Remover cualquier caracter que no sea dígito
+            value = ''.join(filter(str.isdigit, value))
+            # Limitar a 10 dígitos
+            if len(value) > 10:
+                value = value[:10]
+            # Actualizar el texto del input
+            instance.text = value
 
     def mostrar_popup(self, titulo, mensaje):
         """Muestra un popup con un mensaje"""
@@ -149,24 +158,10 @@ class NominaGUI(BoxLayout):
             tasa_interes=float(data["Tasa de Interés (%)"].text or 0)
         )
 
-    def modificar_empleado(self, instance):
-        """Modifica un empleado existente en la base de datos"""
-        try:
-            self.validar_campos_requeridos()
-            nomina = self.crear_objeto_nomina()
-            
-            if NominaController.ModificarNomina(nomina):
-                self.mostrar_popup("Éxito", "Nómina modificada correctamente")
-                self.calcular_nomina(None)  # Actualiza los resultados
-            
-        except Exception as e:
-            self.mostrar_popup("Error", str(e))
-
     def calcular_nomina(self, instance):
         """
         Método que recoge los datos del formulario, crea un objeto Nomina,
-        calcula y guarda o actualiza en la base de datos y muestra los resultados.
-        También maneja excepciones mostrando un popup en caso de error.
+        calcula y guarda una nueva nómina en la base de datos y muestra los resultados.
         """
         try:
             self.validar_campos_requeridos()
@@ -178,13 +173,9 @@ class NominaGUI(BoxLayout):
             valor_extra = nomina.calcular_valor_hora_extra(nomina.horas_extras, nomina.tipo_hora_extra)
             valor_extra_adicional = nomina.calcular_valor_hora_extra(nomina.horas_extras_adicionales, nomina.tipo_hora_extra_adicional)
 
-            # Intentar actualizar primero, si no existe insertarlo como nuevo
-            try:
-                NominaController.ModificarNomina(nomina)
-                self.mostrar_popup("Éxito", "Nómina actualizada y guardada correctamente")
-            except ValueError:  # Si el empleado no existe
-                NominaController.InsertarNomina(nomina)
-                self.mostrar_popup("Éxito", "Nueva nómina guardada correctamente")
+            # Insertar nueva nómina
+            NominaController.InsertarNomina(nomina)
+            self.mostrar_popup("Éxito", "Nueva nómina guardada correctamente")
 
             # Mostrar los resultados
             self.resultado_label.text = f"""
@@ -198,6 +189,7 @@ Bonificación: ${bonificacion:,.2f}
 Valor Horas Extra: ${valor_extra:,.2f}
 Valor Horas Extra Adicionales: ${valor_extra_adicional:,.2f}
 Salario Neto: ${salario_neto:,.2f}"""
+
         except Exception as e:
             self.mostrar_popup("Error", str(e))
 

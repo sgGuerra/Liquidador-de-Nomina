@@ -95,6 +95,18 @@ class Nomina:
                    (salario_bruto - limite_superior) * PORCENTAJE_APORTE_FONDO_SOLIDARIDAD_PENSIONAL.get("limite superior", 0)
 
     def calcular(self):
+        # Validación del formato de la cédula
+        if not self.empleado.cedula.isdigit() or not (8 <= len(self.empleado.cedula) <= 10):
+            raise CedulaInvalidaError()
+
+        # Validación del formato del nombre
+        if not all(c.isalpha() or c.isspace() for c in self.empleado.nombres):
+            raise NombreInvalidoError()
+
+        # Validación del formato del apellido
+        if not all(c.isalpha() or c.isspace() for c in self.empleado.apellidos):
+            raise ApellidoInvalidoError()
+
         if self.salario_base == 0.0:
             raise SalarioBaseInexistente()
         if self.salario_base < 0:

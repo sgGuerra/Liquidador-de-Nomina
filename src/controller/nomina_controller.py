@@ -4,6 +4,7 @@ sys.path.append("src")
 
 import psycopg2
 from model.calculo_nomina import Nomina
+from model.excepciones import *
 import SecretConfig
 
 class NominaController:
@@ -29,14 +30,31 @@ class NominaController:
         Inserta un nuevo empleado con su cargo y horas extras
         Args:
             nomina: Objeto Nomina con todos los datos necesarios
+        Raises:
+            CargoNoExistenteError: Si el cargo no existe en la base de datos
+            TipoHoraExtraNoExistenteError: Si el tipo de hora extra no existe
+            EmpleadoExistenteError: Si ya existe un empleado con la cédula proporcionada
         """
+        # Validar los datos antes de intentar insertarlos
+        try:
+            nomina.calcular()  # Esto ejecutará todas las validaciones definidas en la clase Nomina
+        except Exception as e:
+            raise e  # Propagar cualquier error de validación
+        
         cursor = NominaController.Obtener_cursor()
         try:
+            # 0. Verificar si ya existe un empleado con esa cédula
+            cursor.execute("SELECT cedula FROM empleados WHERE cedula = %s", (nomina.empleado.cedula,))
+            if cursor.fetchone():
+                cursor.connection.rollback()
+                raise EmpleadoExistenteError(nomina.empleado.cedula)
+
             # 1. Buscar el ID del cargo
             cursor.execute("SELECT id FROM cargos WHERE cargo_empleado = %s", (nomina.cargo,))
             resultado_cargo = cursor.fetchone()
             if not resultado_cargo:
-                raise ValueError(f"No existe un cargo con el nombre {nomina.cargo}")
+                cursor.connection.rollback()
+                raise CargoNoExistenteError(nomina.cargo)
             cargo_id = resultado_cargo[0]
 
             # 2. Insertar el empleado
@@ -61,7 +79,8 @@ class NominaController:
                 """, (nomina.tipo_hora_extra,))
                 resultado_tipo_hora = cursor.fetchone()
                 if not resultado_tipo_hora:
-                    raise ValueError(f"No existe el tipo de hora extra {nomina.tipo_hora_extra}")
+                    cursor.connection.rollback()
+                    raise TipoHoraExtraNoExistenteError(nomina.tipo_hora_extra)
                 
                 cursor.execute("""
                     INSERT INTO horas_extras (id_empleado, id_tipo_hora, numero_de_horas)
@@ -82,7 +101,8 @@ class NominaController:
                 
                 resultado_tipo_hora_adicional = cursor.fetchone()
                 if not resultado_tipo_hora_adicional:
-                    raise ValueError(f"No existe el tipo de hora extra {nomina.tipo_hora_extra_adicional}")
+                    cursor.connection.rollback()
+                    raise TipoHoraExtraNoExistenteError(nomina.tipo_hora_extra_adicional)
                 
                 cursor.execute("""
                     INSERT INTO horas_extras (id_empleado, id_tipo_hora, numero_de_horas)
@@ -113,6 +133,7 @@ class NominaController:
             raise e
         
     
+    @staticmethod
     def ModificarNomina(nomina: Nomina) -> bool:
         """
         Modifica los datos de un empleado existente en la base de datos.
@@ -124,21 +145,30 @@ class NominaController:
             bool: True si la modificación fue exitosa
             
         Raises:
-            ValueError: Si no existe el empleado, cargo o tipo de hora extra
-            Exception: Para otros errores de base de datos
+            EmpleadoNoExistenteError: Si no existe el empleado
+            CargoNoExistenteError: Si no existe el cargo
+            TipoHoraExtraNoExistenteError: Si no existe el tipo de hora extra
         """
+        # Validar los datos antes de intentar modificarlos
+        try:
+            nomina.calcular()  # Esto ejecutará todas las validaciones definidas en la clase Nomina
+        except Exception as e:
+            raise e  # Propagar cualquier error de validación
+
         cursor = NominaController.Obtener_cursor()
         try:
             # 1. Verificar que el empleado existe
             cursor.execute("SELECT cedula FROM empleados WHERE cedula = %s", (nomina.empleado.cedula,))
             if not cursor.fetchone():
-                raise ValueError(f"No existe un empleado con cédula {nomina.empleado.cedula}")
+                cursor.connection.rollback()
+                raise EmpleadoNoExistenteError(nomina.empleado.cedula)
 
             # 2. Buscar el ID del cargo
             cursor.execute("SELECT id FROM cargos WHERE cargo_empleado = %s", (nomina.cargo,))
             resultado_cargo = cursor.fetchone()
             if not resultado_cargo:
-                raise ValueError(f"No existe un cargo con el nombre {nomina.cargo}")
+                cursor.connection.rollback()
+                raise CargoNoExistenteError(nomina.cargo)
             cargo_id = resultado_cargo[0]
 
             # 3. Actualizar datos básicos del empleado
@@ -169,7 +199,7 @@ class NominaController:
                 """, (nomina.tipo_hora_extra,))
                 resultado_tipo_hora = cursor.fetchone()
                 if not resultado_tipo_hora:
-                    raise ValueError(f"No existe el tipo de hora extra {nomina.tipo_hora_extra}")
+                    raise TipoHoraExtraNoExistenteError(nomina.tipo_hora_extra)
                 
                 cursor.execute("""
                     INSERT INTO horas_extras (id_empleado, id_tipo_hora, numero_de_horas)
@@ -190,7 +220,7 @@ class NominaController:
                 
                 resultado_tipo_hora_adicional = cursor.fetchone()
                 if not resultado_tipo_hora_adicional:
-                    raise ValueError(f"No existe el tipo de hora extra {nomina.tipo_hora_extra_adicional}")
+                    raise TipoHoraExtraNoExistenteError(nomina.tipo_hora_extra_adicional)
                 
                 cursor.execute("""
                     INSERT INTO horas_extras (id_empleado, id_tipo_hora, numero_de_horas)
