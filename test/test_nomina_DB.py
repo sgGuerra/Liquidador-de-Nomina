@@ -37,6 +37,10 @@ class TestNominaDB(unittest.TestCase):
         
 
     def test_insertar_nomina(self):
+        """ Este test verifica que se pueda insertar una nómina en la base de datos correctamente y que a su vez se puede consultar una nómina existente
+            Es decir que prueba tanto el insert into como el select
+            Se espera que la nómina se inserte correctamente y que al consultarla se obtenga la misma información que se insertó
+        . """
         # Insertar la nómina en la base de datos
         NominaController.InsertarNomina(self.nomina)
         # Verificar que la nómina se haya insertado correctamente
