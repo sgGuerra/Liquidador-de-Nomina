@@ -97,8 +97,7 @@ class BorrarNominaScreen(Screen):
             return
             
         try:
-            # Aquí iría la lógica para borrar la nómina de la base de datos
-            # Por ahora solo mostramos un mensaje de éxito
+            NominaController().EliminarEmpleadoPorCedula(cedula)
             self.mostrar_popup("Éxito", f"Se ha borrado la nómina del empleado con cédula {cedula}")
             
             # Limpiar los campos

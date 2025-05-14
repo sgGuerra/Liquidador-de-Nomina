@@ -294,8 +294,76 @@ class NominaController:
         except Exception as e:
             cursor.connection.rollback()
             raise e
+        
+    
+    @staticmethod
+    def ObtenerEmpleadoPorCedula(cedula):
+        """
+        Obtiene los datos de un empleado por su cédula.
+        Args:
+            cedula: Cédula del empleado a buscar.
+        Returns:
+            dict: Diccionario con los datos del empleado o None si no existe.
+        Raises:
+            EmpleadoNoExistenteError: Si no existe el empleado con la cédula dada.
+        """
+        cursor = NominaController.Obtener_cursor()
+        try:
+            cursor.execute("""
+                SELECT e.cedula, e.nombres, e.apellidos, c.cargo_empleado, e.salario_base
+                FROM empleados e
+                JOIN cargos c ON e.cargo = c.id
+                WHERE e.cedula = %s
+            """, (cedula,))
+            empleado = cursor.fetchone()
+            if not empleado:
+                cursor.connection.rollback()
+                raise EmpleadoNoExistenteError(cedula)
+            return {
+                "cedula": empleado[0],
+                "nombres": empleado[1],
+                "apellidos": empleado[2],
+                "cargo": empleado[3],
+                "salario_base": empleado[4]
+            }
+        finally:
+            cursor.connection.close()
+
+    @staticmethod
+    def EliminarEmpleadoPorCedula(cedula):
+        """
+        Elimina un empleado y sus registros asociados por su cédula.
+        Args:
+            cedula: Cédula del empleado a eliminar.
+        Raises:
+            EmpleadoNoExistenteError: Si no existe el empleado con la cédula dada.
+        Returns:
+            bool: True si la eliminación fue exitosa.
+        """
+        cursor = NominaController.Obtener_cursor()
+        try:
+            # Verificar que el empleado existe
+            cursor.execute("SELECT cedula FROM empleados WHERE cedula = %s", (cedula,))
+            if not cursor.fetchone():
+                cursor.connection.rollback()
+                raise EmpleadoNoExistenteError(cedula)
+
+            # Eliminar registros relacionados en otras tablas
+            cursor.execute("DELETE FROM horas_extras WHERE id_empleado = %s", (cedula,))
+            cursor.execute("DELETE FROM prestamos WHERE id_empleado = %s", (cedula,))
+            # Eliminar el empleado
+            cursor.execute("DELETE FROM empleados WHERE cedula = %s", (cedula,))
+            cursor.connection.commit()
+            return True
+        except Exception as e:
+            cursor.connection.rollback()
+            raise e
+        finally:
+            cursor.connection.close()
           
     
+    
+
     @staticmethod
     def Obtener_cursor():
         connection = psycopg2.connect(

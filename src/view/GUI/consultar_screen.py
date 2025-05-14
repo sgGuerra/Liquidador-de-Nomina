@@ -1,3 +1,6 @@
+import sys
+sys.path.append("src")
+
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -7,7 +10,6 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 
-from model.calculo_nomina import Nomina
 from controller.nomina_controller import NominaController
 
 class ConsultarNominaScreen(Screen):
@@ -94,34 +96,19 @@ class ConsultarNominaScreen(Screen):
         try:
             # Aquí iría la lógica para buscar la nómina en la base de datos
             # Por ahora mostramos un mensaje de ejemplo
-            self.resultado_label.text = f"""
-[b]Información de la Nómina[/b]
+            
+            empleado = NominaController().ObtenerEmpleadoPorCedula(cedula)
+            if empleado:
+                resultado = (
+                    f"[b]Cédula:[/b] {empleado['cedula']}\n"
+                    f"[b]Nombres:[/b] {empleado['nombres']}\n"
+                    f"[b]Apellidos:[/b] {empleado['apellidos']}\n"
+                    f"[b]Cargo:[/b] {empleado['cargo']}\n"
+                    f"[b]Salario Base:[/b] {empleado['salario_base']}"
+                )
+                self.resultado_label.text = resultado
+            else:
+                self.resultado_label.text = "No se encontró un empleado con esa cédula."
 
-[b]Datos del Empleado[/b]
-Cédula: {cedula}
-Nombres: Juan Carlos
-Apellidos: Pérez Gómez
-Cargo: Empleado nuevo
-Fecha de ingreso: 01/01/2025
-
-[b]Datos Salariales[/b]
-Salario Base: $1,500,000
-Bonificación: $50,000
-Auxilio de Transporte: $140,000
-
-[b]Horas Extras[/b]
-Cantidad: 10 horas
-Tipo: Diurnas
-Valor: $125,000
-
-[b]Deducciones[/b]
-Salud (4%): $60,000
-Pensión (4%): $60,000
-Préstamo actual: $100,000
-Cuotas restantes: 5
-
-[b]Total[/b]
-Salario Neto: $1,595,000
-"""
         except Exception as e:
             self.mostrar_popup("Error", str(e))
