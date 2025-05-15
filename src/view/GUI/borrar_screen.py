@@ -55,8 +55,7 @@ class BorrarNominaScreen(Screen):
         # Botón borrar
         btn_borrar = Button(
             text="Borrar Nómina",
-            background_color=(0.8, 0, 0, 1),  # Rojo para indicar peligro
-            size_hint=(0.5, 1)
+            background_color=(0.8, 0, 0, 1),  
         )
         btn_borrar.bind(on_press=self.borrar_nomina)
         

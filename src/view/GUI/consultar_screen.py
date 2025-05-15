@@ -79,32 +79,88 @@ class ConsultarNominaScreen(Screen):
         self.add_widget(main_layout)
     
     def mostrar_popup(self, titulo, mensaje):
-        """Muestra un popup con un mensaje"""
+        """Muestra un popup con un mensaje informativo o de error.
+
+        Este método crea y muestra una ventana emergente (popup) con un título
+        y un mensaje. Se usa principalmente para mostrar errores al usuario.
+
+        Args:
+            titulo (str): El título que aparecerá en la barra superior del popup.
+            mensaje (str): El mensaje que se mostrará en el cuerpo del popup.
+
+        Note:
+            El popup se cierra automáticamente al hacer clic en cualquier parte
+            fuera de él o al presionar la tecla Escape.
+        """
         Popup(title=titulo, content=Label(text=mensaje), size_hint=(0.8, 0.3)).open()
     
     def volver_menu_principal(self):
-        """Vuelve a la pantalla principal"""
+        """Navega de vuelta a la pantalla principal de la aplicación.
+
+        Este método cambia la pantalla actual a la pantalla principal ('main')
+        utilizando el ScreenManager de Kivy.
+
+        Note:
+            Este método es llamado cuando el usuario presiona el botón
+            'Volver al Menú Principal'.
+        """
         self.manager.current = 'main'
     
     def buscar_nomina(self, instance):
-        """Busca y muestra la información de la nómina"""
+        """Busca y muestra la información de la nómina de un empleado.
+
+        Este método consulta la información completa de un empleado usando su número de cédula
+        y muestra los resultados en la interfaz gráfica.
+
+        Args:
+            instance: Instancia del botón que triggerea el evento (requerido por Kivy)
+
+        Raises:
+            EmpleadoNoExistenteError: Si no se encuentra un empleado con la cédula proporcionada.
+            CedulaInvalidaError: Si el formato de la cédula no es válido (debe ser numérico y tener entre 8-10 dígitos).
+            psycopg2.Error: Si ocurre un error en la conexión o consulta a la base de datos.
+            psycopg2.InterfaceError: Si hay un problema con la interfaz de la base de datos.
+            psycopg2.OperationalError: Si hay un error operacional en la base de datos (ej: conexión perdida).
+            Exception: Para cualquier otro error no esperado durante la consulta.
+
+        Note:
+            El resultado se muestra en el Label self.resultado_label y los errores
+            se muestran en un popup.
+        """
         cedula = self.cedula_input.text.strip()
         if not cedula:
             self.mostrar_popup("Error", "Ingrese una cédula para consultar")
             return
         
         try:
-            # Aquí iría la lógica para buscar la nómina en la base de datos
-            # Por ahora mostramos un mensaje de ejemplo
-            
             empleado = NominaController().ObtenerEmpleadoPorCedula(cedula)
             if empleado:
+                # Formatear las horas extras
+                horas_extras_info = "No tiene horas extras registradas"
+                if empleado['horas_extras']:
+                    horas_extras_info = "\n".join([
+                        f"- {he['numero_de_horas']} horas {he['tipo_hora_extra']}"
+                        for he in empleado['horas_extras']
+                    ])
+                
+                # Formatear el préstamo
+                prestamo_info = "No tiene préstamo activo"
+                if empleado['prestamo']:
+                    prestamo_info = (
+                        f"Monto: {empleado['prestamo']['monto']}\n"
+                        f"Cuotas: {empleado['prestamo']['numero_de_cuotas']}\n"
+                        f"Tasa de interés: {empleado['prestamo']['tasa_interes']}%\n"
+                        f"Fecha inicio: {empleado['prestamo']['fecha_inicio']}"
+                    )
+                
                 resultado = (
                     f"[b]Cédula:[/b] {empleado['cedula']}\n"
                     f"[b]Nombres:[/b] {empleado['nombres']}\n"
                     f"[b]Apellidos:[/b] {empleado['apellidos']}\n"
                     f"[b]Cargo:[/b] {empleado['cargo']}\n"
-                    f"[b]Salario Base:[/b] {empleado['salario_base']}"
+                    f"[b]Salario Base:[/b] ${empleado['salario_base']:,.2f}\n\n"
+                    f"[b]Horas Extras:[/b]\n{horas_extras_info}\n\n"
+                    f"[b]Préstamo:[/b]\n{prestamo_info}"
                 )
                 self.resultado_label.text = resultado
             else:
