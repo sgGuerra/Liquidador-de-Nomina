@@ -8,6 +8,34 @@ from model.excepciones import *
 import SecretConfig
 
 class NominaController:
+    # Consultas SQL como constantes de clase
+    CONSULTA_DATOS_EMPLEADO = """
+        SELECT 
+            e.cedula, 
+            e.nombres, 
+            e.apellidos, 
+            c.cargo_empleado, 
+            e.salario_base
+        FROM empleados e
+        INNER JOIN cargos c ON e.cargo = c.id
+        WHERE e.cedula = %s
+    """
+
+    CONSULTA_HORAS_EXTRAS = """
+        SELECT h.numero_de_horas, t.nombre_tipo_hora
+        FROM horas_extras h
+        INNER JOIN tipos_horas_extra t ON h.id_tipo_hora = t.tipo_hora_id
+        WHERE h.id_empleado = %s
+    """
+
+    CONSULTA_PRESTAMO = """
+        SELECT monto, numero_de_cuotas, tasa_interes, fecha_inicio
+        FROM prestamos
+        WHERE id_empleado = %s
+        ORDER BY fecha_inicio DESC
+        LIMIT 1
+    """
+
     @staticmethod
     def CrearTabla():
         cursor = NominaController.Obtener_cursor()
@@ -303,29 +331,73 @@ class NominaController:
         Args:
             cedula: Cédula del empleado a buscar.
         Returns:
-            dict: Diccionario con los datos del empleado o None si no existe.
+            dict: Diccionario con los datos del empleado y toda su información de nómina.
         Raises:
+            CedulaInvalidaError: Si la cédula contiene caracteres no numéricos.
+            CedulaMuyCortaError: Si la cédula tiene menos de 8 dígitos.
+            CedulaMuyLargaError: Si la cédula tiene más de 10 dígitos.
             EmpleadoNoExistenteError: Si no existe el empleado con la cédula dada.
         """
+        # Validar formato de cédula
+        if not cedula.isdigit():
+            raise CedulaInvalidaError(cedula)
+        if len(cedula) < 8:
+            raise CedulaMuyCortaError(cedula)
+        if len(cedula) > 10:
+            raise CedulaMuyLargaError(cedula)
+
         cursor = NominaController.Obtener_cursor()
         try:
-            cursor.execute("""
-                SELECT e.cedula, e.nombres, e.apellidos, c.cargo_empleado, e.salario_base
-                FROM empleados e
-                JOIN cargos c ON e.cargo = c.id
-                WHERE e.cedula = %s
-            """, (cedula,))
-            empleado = cursor.fetchone()
-            if not empleado:
-                cursor.connection.rollback()
+            # Consulta principal para datos del empleado
+            cursor.execute(NominaController.CONSULTA_DATOS_EMPLEADO, (cedula,))
+            
+            empleado_base = cursor.fetchone()
+            if not empleado_base:
                 raise EmpleadoNoExistenteError(cedula)
-            return {
-                "cedula": empleado[0],
-                "nombres": empleado[1],
-                "apellidos": empleado[2],
-                "cargo": empleado[3],
-                "salario_base": empleado[4]
+            
+            # Consulta para horas extras
+            cursor.execute(NominaController.CONSULTA_HORAS_EXTRAS, (cedula,))
+            
+            horas_extras = cursor.fetchall()
+            
+            # Consulta para préstamos
+            cursor.execute(NominaController.CONSULTA_PRESTAMO, (cedula,))
+            
+            prestamo = cursor.fetchone()
+            
+            # Construir el diccionario de respuesta
+            resultado = {
+                "cedula": empleado_base[0],
+                "nombres": empleado_base[1],
+                "apellidos": empleado_base[2],
+                "cargo": empleado_base[3],
+                "salario_base": empleado_base[4],
+                "horas_extras": [],
+                "prestamo": None
             }
+            
+            # Agregar información de horas extras si existen
+            if horas_extras:
+                for horas, tipo in horas_extras:
+                    resultado["horas_extras"].append({
+                        "numero_de_horas": horas,
+                        "tipo_hora_extra": tipo
+                    })
+            
+            # Agregar información del préstamo si existe
+            if prestamo:
+                resultado["prestamo"] = {
+                    "monto": prestamo[0],
+                    "numero_de_cuotas": prestamo[1],
+                    "tasa_interes": prestamo[2],
+                    "fecha_inicio": prestamo[3]
+                }
+            
+            return resultado
+            
+        except Exception as e:
+            cursor.connection.rollback()
+            raise e
         finally:
             cursor.connection.close()
 
@@ -336,10 +408,21 @@ class NominaController:
         Args:
             cedula: Cédula del empleado a eliminar.
         Raises:
+            CedulaInvalidaError: Si la cédula contiene caracteres no numéricos.
+            CedulaMuyCortaError: Si la cédula tiene menos de 8 dígitos.
+            CedulaMuyLargaError: Si la cédula tiene más de 10 dígitos.
             EmpleadoNoExistenteError: Si no existe el empleado con la cédula dada.
         Returns:
             bool: True si la eliminación fue exitosa.
         """
+        # Validar formato de cédula
+        if not cedula.isdigit():
+            raise CedulaInvalidaError(cedula)
+        if len(cedula) < 8:
+            raise CedulaMuyCortaError(cedula)
+        if len(cedula) > 10:
+            raise CedulaMuyLargaError(cedula)
+
         cursor = NominaController.Obtener_cursor()
         try:
             # Verificar que el empleado existe
