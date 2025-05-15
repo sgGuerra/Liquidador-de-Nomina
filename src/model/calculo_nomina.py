@@ -96,8 +96,12 @@ class Nomina:
 
     def calcular(self):
         # Validación del formato de la cédula
-        if not self.empleado.cedula.isdigit() or not (8 <= len(self.empleado.cedula) <= 10):
-            raise CedulaInvalidaError()
+        if not self.empleado.cedula.isdigit():
+            raise CedulaInvalidaError(self.empleado.cedula)
+        if len(self.empleado.cedula) < 8:
+            raise CedulaMuyCortaError(self.empleado.cedula)
+        if len(self.empleado.cedula) > 10:
+            raise CedulaMuyLargaError(self.empleado.cedula)
 
         # Validación del formato del nombre
         if not all(c.isalpha() or c.isspace() for c in self.empleado.nombres):
