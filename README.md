@@ -278,28 +278,57 @@ El proyecto está organizado en una estructura de carpetas que facilita la separ
 
 ```
 Liquidador-de-Nomina/
-│
-├── src/
-│   ├── model/
+|
+├── assets
+│   ├── img
+│   │   └── logo_nomina.ico
+│   └── sql
+│       └── DML-LiquidadorNomina.png
+├── dist
+│   └── SistemaNomina.exe
+├── sql
+│   ├── borrar_empleados.sql
+│   ├── insertar_cargos.sql
+│   ├── insertar_tipo_de_horas_extra.sql
+│   ├── tabla_cargos.sql
+│   ├── tabla_empleados.sql
+│   ├── tabla_horas_extra.sql
+│   ├── tabla_prestamo.sql
+│   └── tabla_tipo_hora_extra.sql
+├── src
+│   ├── controller
+│   │   ├── __init__.py
+│   │   ├── cargos_controller.py
+│   │   ├── nomina_controller.py
+│   │   └── tipo_hora_extra_controller.py
+│   ├── model
+│   │   ├── __init__.py
 │   │   ├── calculo_nomina.py
-│   │   ├── excepciones.py
-│   │   └── __init__.py
-│   ├── view/
-│   |    ├── console/
-│   |        ├── main.py
-│   |        └── __init__.py
-|   |
+│   │   ├── clase_empleado.py
+│   │   └── excepciones.py
+│   ├── view
+│   │   ├── GUI
+│   │   │   ├── __init__.py
+│   │   │   ├── app.py
+│   │   │   ├── borrar_screen.py
+│   │   │   ├── calcular_screen.py
+│   │   │   ├── consultar_screen.py
+│   │   │   ├── main_screen.py
+│   │   │   └── modificar_screen.py
+│   │   ├── console
+│   │   │   ├── __init__.py
+│   │   │   └── main.py
+│   │   └── web
 │   └── __init__.py
-│   
-│
-├── test/
+├── test
 │   ├── test_nomina.py
-│   └── __init__.py
-│
-├── .gitignore
+│   └── test_nomina_DB.py
 ├── LICENSE.txt
 ├── Liquidador-de-Nómina.xlsx
 ├── README.md
+├── SecretConfig.py
+├── SistemaNomina.spec
+├── pyproject.toml
 └── requirements.txt
 
 ```
@@ -379,3 +408,140 @@ python src/view/GUI/GUI.py
 - Mileidy Vanegas
 - Miguel Martínez
 ---
+# Liquidador de Nómina (interfaz gráfica + base de datos)
+
+## **Prerrequisitos**
+
+### **Dependencias**
+- Kivy
+  -  Instale el paquete con:
+  ```bash
+  pip install kivy
+  ```
+- psycopg2
+  - Instale el paquete psycopg2 con:
+  ```bash
+  pip install psycopg2
+  ```
+
+### **Configuracion de la base de datos**
+    
+1. **Crear la Base de Datos**
+  - En el gestor de base de datos de su elección, haz clic derecho en "Bases de datos"
+  - Selecciona "Crear" → "Base de datos"
+  - Nombra la base de datos como "nomina"
+  - Haz clic en "Guardar"
+    
+2. **Configurar el Archivo de Conexión**
+  - Crea un archivo llamado SecretConfig.py en la carpeta principal del proyecto
+  - Dentro del archivo escribe los siguientes datos:
+```python
+     PGDATABASE = "nomina"
+     PGUSER = "tu_usuario"     # Normalmente es "postgres"
+     PGPASSWORD = "tu_clave"   # La que pusiste al instalar PostgreSQL
+     PGHOST = "localhost"      # No cambiar
+     PGPORT = "5432"          # No cambiar
+```
+3. **Crear las Tablas Necesarias**
+   - Primero, tabla de cargos y insertar los cargos predeterminados:
+   ```bash
+   sql\tabla_cargos.sql
+   sql\insertar_cargos.sql
+   ```
+   - Segundo, tabla de tipos de horas extra y insertar los tipos de hora extra predeterminados:
+   ```bash
+   sql\tabla_tipo_hora_extra.sql
+   sql\insertar_tipo_de_horas_extra.sql
+   ```
+   - Tercero, tabla de empleados:
+   ```bash
+   sql\tabla_empleados.sql
+   ```
+   - Cuarto, tabla de horas extras:
+   ```bash
+   sql\tabla_horas_extra.sql
+   ```
+   - Quinto, tabla de préstamos:
+   ```bash
+   sql\tabla_prestamo.sql
+   ```
+4. **Verificar la Configuración**
+- Ejecuta el programa
+- Intenta registrar un empleado nuevo
+- Si los datos se guardan correctamente, la configuración está lista
+
+### **Manual de usu** - **Sistema de Liquidación de Nómina**
+1. **Inicio del Programa**
+- Ejecute el archivo SistemaNomina.exe
+- Ubicado en:
+```
+dist\SistemaNomina.exe
+```
+- Se abrirá una ventana principal con un menú de 4 opciones principales
+
+2. **Pantalla Principal**
+La interfaz principal muestra cuatro botones principales:
+  - Calcular Nómina
+  - Modificar Nómina
+  - Consultar Nómina
+  - Borrar Nómina
+    
+3. **Calcular Nómina (Registrar Nuevo Empleado)**
+- Haga clic en "Calcular Nómina"
+- Complete los siguientes campos obligatorios:
+    - Cédula (entre 8 y 10 dígitos)
+    - Nombres (solo letras)
+    - Apellidos (solo letras)
+    - Cargo (seleccione: Empleado nuevo, Empleado antiguo o Administrador)
+    - Salario Base (debe ser igual o mayor al salario mínimo: $1.423.500)
+- Campos opcionales:
+    - Horas Extras (máximo 50 horas mensuales en total)
+    - Tipo de Hora Extra (Diurnas, Nocturnas o Festivas)
+    - Horas Extras Adicionales
+    - Tipo de Hora Extra Adicional
+    - Préstamo (si aplica)
+    - Número de Cuotas (si hay préstamo)
+    - Tasa de Interés (si hay préstamo)
+    - Al finalizar, haga clic en "Calcular"
+    - El sistema mostrará el salario final calculado
+
+4. **Modificar Nómina**
+- Haga clic en "Modificar Nómina"
+- Ingrese la cédula del empleado
+- Modifique los campos necesarios:
+  - Nombres y Apellidos
+  - Cargo
+  - Salario Base
+  - Horas Extras
+  - Préstamos
+- Haga clic en "Modificar" para guardar los cambios
+
+5. **Consultar Nómina**
+- Haga clic en "Consultar Nómina"
+- Ingrese la cédula del empleado
+- El sistema mostrará:
+  - Datos personales del empleado
+  - Información salarial
+  - Horas extras registradas
+  - Préstamos activos
+
+6. **Borrar Nómina**
+- Haga clic en "Borrar Nómina"
+- Ingrese la cédula del empleado
+- Confirme la eliminación
+- El sistema eliminará todos los registros del empleado
+
+Consideraciones Importantes:
+- Validaciones del Sistema:
+  - La cédula debe tener entre 8 y 10 dígitos
+  - Nombres y apellidos solo aceptan letras
+  - El salario base no puede ser menor al mínimo legal
+  - El total de horas extras no puede superar 50 horas mensuales
+
+- Cálculos Automáticos:
+  - Bonificaciones según el cargo
+  - Valor de horas extras según el tipo
+  - Auxilio de transporte (para salarios hasta 2 SMLV)
+  - Deducciones de ley (salud y pensión)
+  - Cuotas de préstamos con intereses
+   
