@@ -10,14 +10,14 @@ else:
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
+from kivy.resources import resource_add_path, resource_find
 
-# Importar todas las pantallas
-# Importar todas las pantallas
-from main_screen import MainScreen
-from calcular_screen import CalcularNominaScreen
-from modificar_screen import ModificarNominaScreen
-from consultar_screen import ConsultarNominaScreen
-from borrar_screen import BorrarNominaScreen
+# Importar todas las pantallas usando rutas relativas
+from view.GUI.main_screen import MainScreen
+from view.GUI.calcular_screen import CalcularNominaScreen
+from view.GUI.modificar_screen import ModificarNominaScreen
+from view.GUI.consultar_screen import ConsultarNominaScreen
+from view.GUI.borrar_screen import BorrarNominaScreen
 
 class NominaApp(App):
     def build(self):
@@ -41,4 +41,6 @@ class NominaApp(App):
 
 # Punto de entrada
 if __name__ == '__main__':
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
     NominaApp().run()

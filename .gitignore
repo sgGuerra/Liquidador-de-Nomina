@@ -23,3 +23,5 @@ cython_debug/
 .idea/
 GUI.spec
 build/
+SistemaNomina.spec
+img/

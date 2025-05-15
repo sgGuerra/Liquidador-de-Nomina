@@ -1,3 +1,4 @@
+altgraph==0.17.4
 certifi==2025.4.26
 charset-normalizer==3.4.2
 docutils==0.21.2
@@ -8,9 +9,15 @@ kivy-deps.angle==0.4.0
 kivy-deps.glew==0.3.1
 Kivy-Garden==0.1.5
 kivy_deps.sdl2==0.8.0
+packaging==25.0
+pefile==2023.2.7
 psycopg2==2.9.10
 Pygments==2.19.1
+pyinstaller==6.13.0
+pyinstaller-hooks-contrib==2025.4
 pypiwin32==223
 pywin32==310
+pywin32-ctypes==0.2.3
 requests==2.32.3
+setuptools==80.6.0
 urllib3==2.4.0
