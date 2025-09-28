@@ -14,6 +14,7 @@ from kivy.resources import resource_add_path, resource_find
 
 # Importar todas las pantallas usando rutas relativas
 from view.GUI.main_screen import MainScreen
+from view.GUI.registrar_screen import RegistrarEmpleadoScreen
 from view.GUI.calcular_screen import CalcularNominaScreen
 from view.GUI.modificar_screen import ModificarNominaScreen
 from view.GUI.consultar_screen import ConsultarNominaScreen
@@ -32,6 +33,7 @@ class NominaApp(App):
         
         # Agregar todas las pantallas
         sm.add_widget(MainScreen())
+        sm.add_widget(RegistrarEmpleadoScreen())
         sm.add_widget(CalcularNominaScreen())
         sm.add_widget(ModificarNominaScreen())
         sm.add_widget(ConsultarNominaScreen())

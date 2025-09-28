@@ -133,7 +133,7 @@ class ConsultarNominaScreen(Screen):
             return
         
         try:
-            empleado = NominaController().ObtenerEmpleadoPorCedula(cedula)
+            empleado = NominaController.ObtenerEmpleadoPorCedula(cedula)
             if empleado:
                 # Formatear las horas extras
                 horas_extras_info = "No tiene horas extras registradas"
@@ -147,11 +147,26 @@ class ConsultarNominaScreen(Screen):
                 prestamo_info = "No tiene préstamo activo"
                 if empleado['prestamo']:
                     prestamo_info = (
-                        f"Monto: {empleado['prestamo']['monto']}\n"
+                        f"Monto: ${empleado['prestamo']['monto']:,.2f}\n"
                         f"Cuotas: {empleado['prestamo']['numero_de_cuotas']}\n"
                         f"Tasa de interés: {empleado['prestamo']['tasa_interes']}%\n"
                         f"Fecha inicio: {empleado['prestamo']['fecha_inicio']}"
                     )
+
+                # Obtener historial de nóminas
+                historial = NominaController.ObtenerHistorialNomina(cedula)
+                historial_info = "No hay historial de nóminas calculadas"
+                if historial:
+                    historial_info = "[b]Historial de Nóminas:[/b]\n"
+                    for h in historial:
+                        historial_info += (
+                            f"[color=333333]Fecha: {h['fecha'].strftime('%Y-%m-%d %H:%M')}[/color]\n"
+                            f"Salario Bruto: ${h['salario_bruto']:,.2f}\n"
+                            f"Deducciones: ${h['deducciones']:,.2f}\n"
+                            f"Impuestos: ${h['impuestos']:,.2f}\n"
+                            f"Auxilio Transporte: ${h['auxilio_transporte']:,.2f}\n"
+                            f"[color=00aa00]Neto: ${h['neto']:,.2f}[/color]\n\n"
+                        )
                 
                 resultado = (
                     f"[b]Cédula:[/b] {empleado['cedula']}\n"
@@ -160,7 +175,8 @@ class ConsultarNominaScreen(Screen):
                     f"[b]Cargo:[/b] {empleado['cargo']}\n"
                     f"[b]Salario Base:[/b] ${empleado['salario_base']:,.2f}\n\n"
                     f"[b]Horas Extras:[/b]\n{horas_extras_info}\n\n"
-                    f"[b]Préstamo:[/b]\n{prestamo_info}"
+                    f"[b]Préstamo:[/b]\n{prestamo_info}\n\n"
+                    f"{historial_info}"
                 )
                 self.resultado_label.text = resultado
             else:

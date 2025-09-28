@@ -22,7 +22,8 @@ class MainScreen(Screen):
         
         # Botones con las diferentes opciones
         opciones = [
-            ("Calcular Nueva Nómina", 'calcular', (0.2, 0.6, 0.8, 1)),
+            ("Registrar Empleado", 'registrar', (0.1, 0.7, 0.3, 1)),
+            ("Calcular Nómina", 'calcular', (0.2, 0.6, 0.8, 1)),
             ("Modificar Nómina", 'modificar', (0.8, 0.6, 0.2, 1)),
             ("Consultar Nómina", 'consultar', (0.2, 0.8, 0.6, 1)),
             ("Borrar Nómina", 'borrar', (0.8, 0.2, 0.2, 1))

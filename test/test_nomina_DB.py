@@ -5,8 +5,9 @@ sys.path.append("src")
 
 from controller.nomina_controller import NominaController
 from model.calculo_nomina import Nomina
-from model.excepciones import *
-
+from model.excepciones import NombreInvalidoError, EmpleadoExistenteError, EmpleadoNoExistenteError, CedulaMuyCortaError, CedulaMuyLargaError
+import SecretConfig
+import os
 import psycopg2
 
 class TestNominaDB(unittest.TestCase):
@@ -17,12 +18,96 @@ class TestNominaDB(unittest.TestCase):
     y manejo de errores.
     """
     
+    @classmethod
+    def setUpClass(cls):
+        """Configura el ambiente de pruebas antes de ejecutar cualquier test.
+        
+        Este método:
+        1. Verifica la conexión a la base de datos
+        2. Crea las tablas si no existen
+        3. Inserta los datos iniciales necesarios (cargos)
+        """
+        try:
+            connection = psycopg2.connect(
+                host=SecretConfig.PGHOST,
+                database=SecretConfig.PGDATABASE,
+                user=SecretConfig.PGUSER,
+                password=SecretConfig.PGPASSWORD,
+                port=SecretConfig.PGPORT,
+                sslmode='require'
+            )
+            cursor = connection.cursor()
+            
+            # Obtener la ruta base del proyecto
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            
+            # Crear tabla de cargos si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_cargos.sql'), 'r') as file:
+                cursor.execute(file.read())
+            
+            # Crear tabla de empleados si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_empleados.sql'), 'r') as file:
+                cursor.execute(file.read())
+
+            # Crear tabla de tipos de horas extra si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_tipo_hora_extra.sql'), 'r') as file:
+                cursor.execute(file.read())
+
+            # Crear tabla de horas extra si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_horas_extra.sql'), 'r') as file:
+                cursor.execute(file.read())
+
+            # Crear tabla de prestamo si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_prestamo.sql'), 'r') as file:
+                cursor.execute(file.read())
+
+            # Crear tabla de historial de nomina si no existe
+            with open(os.path.join(base_dir, 'sql', 'tabla_historial_nomina.sql'), 'r') as file:
+                cursor.execute(file.read())
+
+            # Verificar si ya existen cargos
+            cursor.execute("SELECT COUNT(*) FROM cargos")
+            count = cursor.fetchone()[0]
+
+            # Si no hay cargos, insertar los predeterminados
+            if count == 0:
+                with open(os.path.join(base_dir, 'sql', 'insertar_cargos.sql'), 'r') as file:
+                    cursor.execute(file.read())
+
+            # Verificar si ya existen tipos de horas extra
+            cursor.execute("SELECT COUNT(*) FROM tipos_horas_extra")
+            count = cursor.fetchone()[0]
+
+            # Si no hay tipos, insertar los predeterminados
+            if count == 0:
+                with open(os.path.join(base_dir, 'sql', 'insertar_tipo_de_horas_extra.sql'), 'r') as file:
+                    cursor.execute(file.read())
+            
+            connection.commit()
+            cursor.close()
+            connection.close()
+            
+        except Exception as e:
+            print(f"Error configurando la base de datos: {str(e)}")
+            raise
+    
+
+    
     def setUp(self):
         """Configura el ambiente de pruebas antes de cada test.
-        
+
         - Limpia cualquier dato previo eliminando el empleado de prueba si existe
         - Inicializa los objetos de nómina que se usarán en las pruebas
         """
+        # Limpiar historial de nómina para este empleado primero
+        try:
+            cursor = NominaController.Obtener_cursor()
+            cursor.execute("DELETE FROM historial_nomina WHERE cedula = %s", ("123456789",))
+            cursor.connection.commit()
+            cursor.connection.close()
+        except Exception:
+            pass
+
         # Intentar eliminar el empleado si existe, ignorar si no existe
         try:
             NominaController.EliminarEmpleadoPorCedula("123456789")
@@ -211,7 +296,7 @@ class TestNominaDB(unittest.TestCase):
 
     def test_modificar_empleado_nombre_no_valido(self):
         """Prueba que no se pueda modificar un empleado con un nombre inválido.
-        
+
         Verifica que:
         1. Se pueda insertar un empleado con datos válidos
         2. Al intentar modificarlo con un nombre que contiene números,
@@ -220,3 +305,89 @@ class TestNominaDB(unittest.TestCase):
         NominaController.InsertarNomina(self.nomina)
         with self.assertRaises(NombreInvalidoError):
             NominaController.ModificarNomina(self.nomina_nombre_no_valido)
+
+    def test_guardar_historial_nomina(self):
+        """Prueba el guardado y recuperación del historial de nómina.
+
+        Verifica que:
+        1. Se pueda insertar un empleado
+        2. Se pueda calcular la nómina
+        3. Se pueda guardar el historial con los resultados del cálculo
+        4. Se pueda recuperar el historial y verificar que los datos coincidan
+        """
+        # Insertar empleado
+        NominaController.InsertarNomina(self.nomina)
+
+        # Calcular nómina
+        resultados = self.nomina.calcular()
+
+        # Guardar historial
+        NominaController.GuardarHistorialNomina(
+            self.nomina.empleado.cedula,
+            resultados['salario_bruto'],
+            resultados['deducciones'],
+            resultados['impuestos'],
+            resultados['auxilio_transporte'],
+            resultados['neto']
+        )
+
+        # Obtener historial
+        historial = NominaController.ObtenerHistorialNomina(self.nomina.empleado.cedula)
+
+        self.assertEqual(len(historial), 1)
+        h = historial[0]
+        self.assertEqual(h['salario_bruto'], resultados['salario_bruto'])
+        self.assertEqual(h['deducciones'], resultados['deducciones'])
+        self.assertEqual(h['impuestos'], resultados['impuestos'])
+        self.assertEqual(h['auxilio_transporte'], resultados['auxilio_transporte'])
+        self.assertEqual(h['neto'], resultados['neto'])
+
+    def test_obtener_historial_nomina_no_existente(self):
+        """Prueba la obtención de historial para un empleado sin historial.
+
+        Verifica que se retorne una lista vacía cuando no hay historial para la cédula.
+        """
+        historial = NominaController.ObtenerHistorialNomina("999999999")
+        self.assertEqual(historial, [])
+
+    def test_guardar_multiple_historial_nomina(self):
+        """Prueba el guardado de múltiples entradas de historial para el mismo empleado.
+
+        Verifica que:
+        1. Se puedan guardar múltiples historiales
+        2. Se recuperen en orden descendente por fecha
+        3. Todas las entradas se recuperen correctamente
+        """
+        # Insertar empleado
+        NominaController.InsertarNomina(self.nomina)
+
+        # Primer cálculo y guardado
+        resultados1 = self.nomina.calcular()
+        NominaController.GuardarHistorialNomina(
+            self.nomina.empleado.cedula,
+            resultados1['salario_bruto'],
+            resultados1['deducciones'],
+            resultados1['impuestos'],
+            resultados1['auxilio_transporte'],
+            resultados1['neto']
+        )
+
+        # Modificar salario para segundo cálculo
+        self.nomina.salario_base = 4000000
+        resultados2 = self.nomina.calcular()
+        NominaController.GuardarHistorialNomina(
+            self.nomina.empleado.cedula,
+            resultados2['salario_bruto'],
+            resultados2['deducciones'],
+            resultados2['impuestos'],
+            resultados2['auxilio_transporte'],
+            resultados2['neto']
+        )
+
+        # Obtener historial
+        historial = NominaController.ObtenerHistorialNomina(self.nomina.empleado.cedula)
+
+        self.assertEqual(len(historial), 2)
+        # El más reciente primero
+        self.assertEqual(historial[0]['salario_bruto'], resultados2['salario_bruto'])
+        self.assertEqual(historial[1]['salario_bruto'], resultados1['salario_bruto'])

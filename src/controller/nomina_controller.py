@@ -4,7 +4,15 @@ sys.path.append("src")
 
 import psycopg2
 from model.calculo_nomina import Nomina
-from model.excepciones import *
+from model.excepciones import (
+    CargoNoExistenteError,
+    TipoHoraExtraNoExistenteError,
+    EmpleadoExistenteError,
+    EmpleadoNoExistenteError,
+    CedulaInvalidaError,
+    CedulaMuyCortaError,
+    CedulaMuyLargaError
+)
 import SecretConfig
 
 class NominaController:
@@ -40,6 +48,14 @@ class NominaController:
     def CrearTabla():
         cursor = NominaController.Obtener_cursor()
         with open("sql/tabla_empleados.sql", "r") as sql_file:
+            consulta = sql_file.read()
+        cursor.execute(consulta)
+        cursor.connection.commit()
+
+    @staticmethod
+    def CrearTablaHistorial():
+        cursor = NominaController.Obtener_cursor()
+        with open("sql/tabla_historial_nomina.sql", "r") as sql_file:
             consulta = sql_file.read()
         cursor.execute(consulta)
         cursor.connection.commit()
@@ -446,6 +462,65 @@ class NominaController:
           
     
     
+
+    @staticmethod
+    def GuardarHistorialNomina(cedula, salario_bruto, deducciones, impuestos, auxilio_transporte, neto):
+        """
+        Guarda el historial de una nómina calculada en la base de datos.
+        Args:
+            cedula: Cédula del empleado.
+            salario_bruto: Salario bruto calculado.
+            deducciones: Deducciones calculadas.
+            impuestos: Impuestos calculados.
+            auxilio_transporte: Auxilio de transporte.
+            neto: Salario neto.
+        """
+        cursor = NominaController.Obtener_cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO historial_nomina (cedula, salario_bruto, deducciones, impuestos, auxilio_transporte, neto)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (cedula, salario_bruto, deducciones, impuestos, auxilio_transporte, neto))
+            cursor.connection.commit()
+        except Exception as e:
+            cursor.connection.rollback()
+            raise e
+        finally:
+            cursor.connection.close()
+
+    @staticmethod
+    def ObtenerHistorialNomina(cedula):
+        """
+        Obtiene el historial de nóminas de un empleado.
+        Args:
+            cedula: Cédula del empleado.
+        Returns:
+            list: Lista de diccionarios con el historial.
+        """
+        cursor = NominaController.Obtener_cursor()
+        try:
+            cursor.execute("""
+                SELECT fecha_calculo, salario_bruto, deducciones, impuestos, auxilio_transporte, neto
+                FROM historial_nomina
+                WHERE cedula = %s
+                ORDER BY fecha_calculo DESC
+            """, (cedula,))
+            resultados = cursor.fetchall()
+            historial = []
+            for row in resultados:
+                historial.append({
+                    'fecha': row[0],
+                    'salario_bruto': row[1],
+                    'deducciones': row[2],
+                    'impuestos': row[3],
+                    'auxilio_transporte': row[4],
+                    'neto': row[5]
+                })
+            return historial
+        except Exception as e:
+            raise e
+        finally:
+            cursor.connection.close()
 
     @staticmethod
     def Obtener_cursor():

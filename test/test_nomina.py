@@ -27,7 +27,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_normal_2(self):
         cedula = "0987654321"
@@ -49,7 +49,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_normal_3(self):
         cedula = "1122334455"
@@ -71,7 +71,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_normal_4(self):
         cedula = "2233445566"
@@ -93,7 +93,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_extraordinario_SalarioAlto(self):
         cedula = "3344556677"
@@ -115,7 +115,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_extraordinario_MaxHorasExtras(self):
         cedula = "4455667788"
@@ -137,7 +137,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_extraordinario_MaxCuotas(self):
         cedula = "5566778899"
@@ -159,7 +159,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_caso_extraordinario_HorasExtrasAdiccionales(self):
         cedula = "6677889900"
@@ -181,7 +181,7 @@ class CalculoSalarioTest(unittest.TestCase):
                         tipo_hora_extra_adicional, prestamo, cuotas, tasa_interes)
         
         resultado = nomina.calcular()
-        self.assertAlmostEqual(salario_esperado, resultado, 2)
+        self.assertAlmostEqual(salario_esperado, resultado['neto'], 2)
 
     def test_salario_negativo(self):
         cedula = "7788990011"

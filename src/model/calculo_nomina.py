@@ -120,10 +120,10 @@ class Nomina:
 
         if self.cargo not in BONIFICACIONES_POR_CARGO:
             raise CargoInvalidoError(self.cargo)
-        
+
         if self.prestamo < SIN_PRESTAMO:
             raise PrestamoNegativoError(self.prestamo)
-    
+
         salario_bruto = self.calcular_salario_bruto()
         deducciones = self.calcular_deducciones()
         impuestos = self.calcular_impuestos(salario_bruto)
@@ -148,6 +148,14 @@ class Nomina:
         else:
             auxilio_transporte = 0
 
-        return salario_bruto + auxilio_transporte - deducciones - impuestos
+        neto = salario_bruto + auxilio_transporte - deducciones - impuestos
+
+        return {
+            'salario_bruto': salario_bruto,
+            'deducciones': deducciones,
+            'impuestos': impuestos,
+            'auxilio_transporte': auxilio_transporte,
+            'neto': neto
+        }
 
 
